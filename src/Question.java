@@ -1,5 +1,5 @@
 
-public class Spørsmål {
+public class Question {
 	//lag flere spørsmål
 
 }
