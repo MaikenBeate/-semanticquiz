@@ -4,10 +4,13 @@ import java.util.List;
 
 public class SemanticInfo 
 {
+	private static Question.TypeOfSQuestion sQuesType;
+
 	private static List<Container> returnCon = new ArrayList<Container>();
 	
 	public SemanticInfo()
 	{
+		sQuesType = Question.TypeOfSQuestion.values()[((int)(Math.random() * Question.TypeOfSQuestion.values().length))];
 		//foreach query needed do:
 		//Make query:
 		
