@@ -4,14 +4,15 @@ import java.util.List;
 
 public class SemanticInfo 
 {
-	private static Question.TypeOfSQuestion sQuesType;
+	private static String sQuesType;
 
 	private static List<Container> returnCon = new ArrayList<Container>();
 	
 	public SemanticInfo()
 	{
-		sQuesType = Question.TypeOfSQuestion.values()[((int)(Math.random() * Question.TypeOfSQuestion.values().length))];
 		//foreach query needed do:
+		sQuesType = Question.StringQuestionType.Director.toString();
+		System.out.println(sQuesType);//Question.TypeOfQuestion.values()[((int)(Math.random() * Question.TypeOfQuestion.values().length))];
 		//Make query:
 		
 			/*Query query = QueryFactory.create(""+"PREFIX movie: <http://data.linkedmdb.org/resource/movie/>"
@@ -28,7 +29,7 @@ public class SemanticInfo
 		    												+"PREFIX dc: <http://purl.org/dc/terms/>"
 		    +"SELECT ? diruri WHERE{"+ "?diruri movie:director_name +\"Quentin Tarantino\" ."+"}");
 		    
-		    QueryExecution queryex = QueryExecutionFactory.create(query, dataset);
+		    QueryExecution queyex = QueryExecutionFactory.create(query, dataset);
 		    
 		    ResultSet resultset = queryex.execSelect();
 		    while(resultset.hasNext())
@@ -38,7 +39,11 @@ public class SemanticInfo
 		
 		//Input info from query into new container:
 		Container tCon = new Container();
+		//tCon.questionType = sQuesType;
 		tCon.movieName = "this is an example";
+		tCon.directorName = "Input director string";
+		tCon.wrongAnswers = new String[]{"Wrong answer one string here", "Wrong answer two string here", "Wrong answer three string here"};
+		//tCon.moviePosterImage ;
 		//add container to the return containers:
 		returnCon.add(tCon);
 		//foreach end

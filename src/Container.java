@@ -1,11 +1,13 @@
+import java.awt.*;
 
 public class Container {
 
-	public static Question.TypeOfSQuestion questionType;
-	public static String movieName;
-	public static String directorName;
-	public static String releaseDate;
-	public static String[] wrongAnswers;
+	public Question.TypeOfQuestion questionType;
+	public String movieName;
+	public String directorName;
+	public String releaseDate;
+	public String[] wrongAnswers;
+	public Image moviePosterImage;
 		
 	
 	public Container(){}

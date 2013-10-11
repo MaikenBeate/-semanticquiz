@@ -16,12 +16,12 @@ public class Main {
     public static void main (String args[]) 
     {
     	semInfo = new SemanticInfo();
-    	con = semInfo.getContainer();
+    	//con = semInfo.getContainer();
     	
-    	for(Container c : con)
+    	/*for(Container c : con)
     	{
     		que.add(new Question(c));
-    	}
+    	}*/
     	
     }
 }

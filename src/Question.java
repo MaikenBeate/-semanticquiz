@@ -1,35 +1,46 @@
-
 public class Question {
 	private static String questionString;
 	private static String questionAnswer;
 	private static Container con;
 	private static boolean answered;
 	
-	public Question(Container con)
+	public Question(Container cont)
 	{
-		this.con = con;
+		Question.con = cont;
 	}
-	public String GenerateQuestion()
+	public static void GenerateQuestion()
 	{
-		switch(con.questionType)
+		/*switch(con.questionType)
 		{
-		case MovieName:
-			questionString = "What is the name of the movie directed by " + con.directorName + " and released in " + con.releaseDate;
+		case String:
+			//questionString = "What is the name of the movie directed by " + con.directorName + " and released in " + con.releaseDate;
 			questionAnswer = con.movieName;
 			break;
-		case Director:
+		case Image:
 			questionString = "Who directed " + con.movieName;
 			questionAnswer = con.directorName; 
 			break;
-		}
-		
-		return null;
+		}*/
 	}
 	
+	public String getQuestion()
+	{
+		return questionString;
+	}
 	public boolean getAnswered()
 	{
 		return answered;
 	}
+	public String getAnswer()
+	{
+		return questionAnswer;
+	}
+	public Container getContainer()
+	{
+		return con;
+	}
 	
-	public enum TypeOfSQuestion{MovieName, Director}
+	public enum TypeOfQuestion{StringQuestionType, Image}
+	public enum StringQuestionType{MovieName, Director}
+	
 }
