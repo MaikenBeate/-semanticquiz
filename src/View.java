@@ -15,7 +15,7 @@ import javax.swing.JLabel;
  * @author Maiken Beate Fjellanger
  *
  */
-public class View extends JFrame implements ActionListener{
+public class View extends JFrame{
 	
 	private Container contentPane;
 	private JLabel question;
@@ -81,20 +81,14 @@ public class View extends JFrame implements ActionListener{
 	}
 
 	/**
-	 * @param args
+	 * @param args 
+	 * Temporary
 	 */
 	public static void main(String[] args) {
 		View view = new View();
 
 	}
 
-	/* (non-Javadoc)
-	 * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
-	 */
-	@Override
-	public void actionPerformed(ActionEvent e) {
-		// TODO Auto-generated method stub
 
-	}
 
 }

@@ -1,9 +1,9 @@
 
 public class Question {
-	//lag flere spørsmål
-	public static String questionString;
-	public static String questionAnswer;
-	public static Container con;
+	private static String questionString;
+	private static String questionAnswer;
+	private static Container con;
+	private static boolean answered;
 	
 	public Question(Container con)
 	{
@@ -25,5 +25,11 @@ public class Question {
 		
 		return null;
 	}
+	
+	public boolean getAnswered()
+	{
+		return answered;
+	}
+	
 	public enum TypeOfSQuestion{MovieName, Director}
 }
