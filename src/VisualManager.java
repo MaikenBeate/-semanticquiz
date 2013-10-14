@@ -1,7 +1,7 @@
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-
+//Singleton instantiation.
 public class VisualManager implements ActionListener{
 
 	private static VisualManager visualManager = null;

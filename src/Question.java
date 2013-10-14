@@ -3,6 +3,7 @@ public class Question {
 	private static String questionAnswer;
 	private static Container con;
 	private static boolean answered;
+	private static String[] answers;
 	
 	public Question(Container cont)
 	{
@@ -31,16 +32,25 @@ public class Question {
 	{
 		return answered;
 	}
-	public String getAnswer()
+	public void setAnswered(boolean a)
+	{
+		answered = a;
+	}
+	public String getCorrectAnswer()
 	{
 		return questionAnswer;
+	}
+	public String[] getAllAnswers()
+	{
+		return answers;
 	}
 	public Container getContainer()
 	{
 		return con;
 	}
 	
-	public enum TypeOfQuestion{StringQuestionType, Image}
-	public enum StringQuestionType{MovieName, Director}
+	public enum TypeOfQuestion{StringQuestionType, ImageQuestion}
+	public enum StringQuestionType{MovieName, Director, Genre, ReleaseYear}
+	public enum ImageQuestion{}
 	
 }
