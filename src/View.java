@@ -15,19 +15,30 @@ import javax.swing.JLabel;
 
 /**
  * @author Maiken Beate Fjellanger
+ * Singleton instantiation
  *
  */
 public class View extends JFrame{
 	
 	private Container contentPane;
 	private JLabel question;
+	private static View view = null;
 	
 
 	/**
 	 * 
 	 */
-	public View(){
+	private View(){
 		setUpInterFace();
+	}
+	
+	public static View instantiate(){
+		
+		if(view == null){
+			view = new View();
+		}
+		
+		return view;
 	}
 
 	/**
