@@ -11,8 +11,8 @@ public class SemanticInfo
 	public SemanticInfo()
 	{
 		//foreach query needed do:
-		sQuesType = Question.StringQuestionType.Director.toString();
-		System.out.println(sQuesType);//Question.TypeOfQuestion.values()[((int)(Math.random() * Question.TypeOfQuestion.values().length))];
+		//sQuesType = Question.StringQuestionType.Director.toString();
+		//System.out.println(sQuesType);//Question.TypeOfQuestion.values()[((int)(Math.random() * Question.TypeOfQuestion.values().length))];
 		//Make query:
 		
 			/*Query query = QueryFactory.create(""+"PREFIX movie: <http://data.linkedmdb.org/resource/movie/>"

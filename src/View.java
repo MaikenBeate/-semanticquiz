@@ -3,6 +3,8 @@ import java.awt.Container;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
+import javax.swing.ImageIcon;
+import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import java.awt.Color;
@@ -13,19 +15,30 @@ import javax.swing.JLabel;
 
 /**
  * @author Maiken Beate Fjellanger
+ * Singleton instantiation
  *
  */
 public class View extends JFrame{
 	
 	private Container contentPane;
 	private JLabel question;
+	private static View view = null;
 	
 
 	/**
 	 * 
 	 */
-	public View(){
+	private View(){
 		setUpInterFace();
+	}
+	
+	public static View instantiate(){
+		
+		if(view == null){
+			view = new View();
+		}
+		
+		return view;
 	}
 
 	/**
@@ -37,36 +50,35 @@ public class View extends JFrame{
 		contentPane.setFont(new Font("Serif", Font.PLAIN, 13));
 		contentPane.setBackground(Color.WHITE);
 		
-		addFillers();
 		addLogo();
 		setUpQuestionPanel();
+		addFooter();
 		
 		this.setDefaultCloseOperation(EXIT_ON_CLOSE);
 		this.setVisible(true);
 		this.pack();
 	}
-
-	/**
-	 * 
-	 */
-	private void addFillers() {
-		JPanel east = new JPanel();
+	
+	private void addLogo() {
 		JPanel west = new JPanel();
+		west.setBackground(Color.WHITE);
 		
-		east.setSize(100, 500);
-		west.setSize(100, 500);
+		JLabel logo = new JLabel();
+		ImageIcon imgThisImg = new ImageIcon("img/semantic_Quiz2.jpg");
+		logo.setIcon(imgThisImg);
+		west.add(logo);
 		
-		contentPane.add(east, BorderLayout.EAST);
 		contentPane.add(west, BorderLayout.WEST);
 	}
 	
-	private void addLogo() {
-		JPanel north = new JPanel();
-		JLabel logo = new JLabel("Semantic Quiz");
+	private void addFooter(){
+		JButton okButton = new JButton();
+		okButton.setIcon(new ImageIcon("img/answer.jpg"));
+		JPanel buttonPanel = new JPanel();
+		buttonPanel.setBackground(Color.WHITE);
+		buttonPanel.add(okButton);
 		
-		north.add(logo);
-		north.setSize(600, 30);
-		contentPane.add(north, BorderLayout.NORTH);
+		contentPane.add(buttonPanel, BorderLayout.SOUTH);
 	}
 
 	/**
