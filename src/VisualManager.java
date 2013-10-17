@@ -5,12 +5,13 @@ import java.awt.event.ActionListener;
 public class VisualManager implements ActionListener{
 
 	private static VisualManager visualManager = null;
+	private static Question[] questionArray;
 
 	/**
 	 * @param args
 	 */
 	private VisualManager(Question[] questionArray){
-		
+		VisualManager.questionArray = questionArray;
 	}
 	
 	public static VisualManager instantiate(Question[] questionArray){

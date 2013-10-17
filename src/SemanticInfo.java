@@ -1,16 +1,18 @@
+import java.awt.Image;
 import java.util.ArrayList;
 import java.util.List;
 
-
 public class SemanticInfo 
 {
-	private static String sQuesType;
-
-	private static List<Container> returnCon = new ArrayList<Container>();
+	private static List<Question> returnQue = new ArrayList<Question>();
 	
 	public SemanticInfo()
 	{
 		//foreach query needed do:
+		Container tCon = new Container();
+		Question tempQ = new Question();
+		tempQ.tOQ = Question.TypeOfQuestion.values()[((int)(Math.random() * Question.TypeOfQuestion.values().length))];
+		
 		//sQuesType = Question.StringQuestionType.Director.toString();
 		//System.out.println(sQuesType);//Question.TypeOfQuestion.values()[((int)(Math.random() * Question.TypeOfQuestion.values().length))];
 		//Make query:
@@ -38,18 +40,20 @@ public class SemanticInfo
 		    }*/
 		
 		//Input info from query into new container:
-		Container tCon = new Container();
+		
 		//tCon.questionType = sQuesType;
 		tCon.movieName = "this is an example";
 		tCon.directorName = "Input director string";
-		tCon.wrongAnswers = new String[]{"Wrong answer one string here", "Wrong answer two string here", "Wrong answer three string here"};
-		//tCon.moviePosterImage ;
+		tCon.answers = new String[]{"Correct answer here","Wrong answer one string here", "Wrong answer two string here", "Wrong answer three string here"};
+		tCon.releaseDate = "release date here";
+		//tConmoviePosterImage;
 		//add container to the return containers:
-		returnCon.add(tCon);
+		tempQ.setContainer(tCon);
+		returnQue.add(tempQ);
 		//foreach end
 	}
-	public Container[] getContainer()
+	public Question[] getQuestion()
 	{
-		return (Container[])returnCon.toArray();
+		return (Question[])returnQue.toArray();
 	}
 }
