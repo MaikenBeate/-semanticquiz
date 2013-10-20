@@ -1,59 +1,169 @@
-import java.awt.Image;
 import java.util.ArrayList;
 import java.util.List;
+
+import org.apache.log4j.PropertyConfigurator;
+
+import com.hp.hpl.jena.query.Query;
+import com.hp.hpl.jena.query.QueryExecution;
+import com.hp.hpl.jena.query.QueryExecutionFactory;
+import com.hp.hpl.jena.query.QueryFactory;
+import com.hp.hpl.jena.query.ResultSet;
+import com.hp.hpl.jena.query.ResultSetFormatter;
 
 public class SemanticInfo 
 {
 	private static List<Question> returnQue = new ArrayList<Question>();
+	private static ArrayList<Container> containers = new ArrayList<Container>();
 	
 	public SemanticInfo()
 	{
-		//foreach query needed do:
-		Container tCon = new Container();
-		Question tempQ = new Question();
-		tempQ.tOQ = Question.TypeOfQuestion.values()[((int)(Math.random() * Question.TypeOfQuestion.values().length))];
-		
-		//sQuesType = Question.StringQuestionType.Director.toString();
-		//System.out.println(sQuesType);//Question.TypeOfQuestion.values()[((int)(Math.random() * Question.TypeOfQuestion.values().length))];
-		//Make query:
-		
-			/*Query query = QueryFactory.create(""+"PREFIX movie: <http://data.linkedmdb.org/resource/movie/>"
-		    		+"PREFIX owl: <http://www.w3.org/2002/07/owl#>"
-		    			+"PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>"
-		    				+"PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>"
-		    					+"PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>"
-		    						+"PREFIX foaf: <http://xmlns.com/foaf/0.1/>"
-		    							+"PREFIX oddlinker: <http://data.linkedmdb.org/resource/oddlinker/>"
-		    								+"PREFIX map: <file:/C:/d2r-server-0.4/mapping.n3#>"
-		    									+"PREFIX db: <http://data.linkedmdb.org/resource/>"
-		    										+"PREFIX dbpedia: <http://dbpedia.org/property/>"
-		    											+"PREFIX skos: <http://www.w3.org/2004/02/skos/core#>"
-		    												+"PREFIX dc: <http://purl.org/dc/terms/>"
-		    +"SELECT ? diruri WHERE{"+ "?diruri movie:director_name +\"Quentin Tarantino\" ."+"}");
-		    
-		    QueryExecution queyex = QueryExecutionFactory.create(query, dataset);
-		    
-		    ResultSet resultset = queryex.execSelect();
-		    while(resultset.hasNext())
-		    {
-		    	System.out.println(resultset.next().toString());
-		    }*/
-		
-		//Input info from query into new container:
-		
-		//tCon.questionType = sQuesType;
-		tCon.movieName = "this is an example";
-		tCon.directorName = "Input director string";
-		tCon.answers = new String[]{"Correct answer here","Wrong answer one string here", "Wrong answer two string here", "Wrong answer three string here"};
-		tCon.releaseDate = "release date here";
-		//tConmoviePosterImage;
-		//add container to the return containers:
-		tempQ.setContainer(tCon);
-		returnQue.add(tempQ);
-		//foreach end
+		PropertyConfigurator.configure("log4j.properties");		
 	}
+	
+	
+	/*Prefixes - temporary
+	 * 
+	 * "PREFIX movie: <http://data.linkedmdb.org/resource/movie/>"
+    		+"PREFIX owl: <http://www.w3.org/2002/07/owl#>"
+    			+"PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>"
+    				+"PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>"
+    					+"PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>"
+    						+"PREFIX foaf: <http://xmlns.com/foaf/0.1/>"
+    							+"PREFIX oddlinker: <http://data.linkedmdb.org/resource/oddlinker/>"
+    								+"PREFIX map: <file:/C:/d2r-server-0.4/mapping.n3#>"
+    									+"PREFIX db: <http://data.linkedmdb.org/resource/>"
+    										+"PREFIX dbpedia: <http://dbpedia.org/property/>"
+    											+"PREFIX skos: <http://www.w3.org/2004/02/skos/core#>"
+    												+"PREFIX dc: <http://purl.org/dc/terms/>"*/
+
+	
+	
+	/**
+	 * Queries LinkedMDB for information about 10 random movies (for now), saves the information and makes a list of
+	 * questions based on the movie information
+	 * @author Maiken Beate
+	 */
+	public void fetchMovieInformation(){
+		
+		String queryString =
+				  "PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>"
+				+ "PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>"
+				+ "PREFIX dc: <http://purl.org/dc/terms/>"
+				+ "PREFIX movie: <http://data.linkedmdb.org/resource/movie/>"
+				+ "SELECT ?title ?directorName ?date "
+				+ "WHERE {"
+				+ 		"?movieuri dc:title ?title ."
+				+ 		"?movieuri movie:director ?directoruri ."
+				+ 		"?directoruri movie:director_name ?directorName ."
+				+ 		"?movieuri dc:date ?date " 
+				+ "} LIMIT 10";
+
+        Query query = QueryFactory.create(queryString);
+        QueryExecution qExe = QueryExecutionFactory.sparqlService( "http://data.linkedmdb.org/sparql", query );
+        ResultSet resultset = qExe.execSelect();
+        
+        //Making a Container and formulating a question for each movie
+        while(resultset.hasNext())
+	    {
+        	
+        	Container container = saveInformationInContainer(resultset.next().toString());
+        	containers.add(container);
+        	
+	    	makeQuestion(container);
+	    }
+		        
+	}
+
+	
 	public Question[] getQuestion()
 	{
 		return (Question[])returnQue.toArray();
+	}
+	
+	
+	//temporary
+	public static void main(String[] args) {
+		
+		SemanticInfo sem = new SemanticInfo();
+		sem.fetchMovieInformation();
+		
+		 //temporary test
+        for(Container container : containers){
+        	System.out.println("Movie title: " + container.movieName + ", Director: " + container.directorName + ", Date: " + container.releaseDate);
+        }
+	}
+	
+	
+	//John sin oppgave
+	private void makeQuestion(Container container) {
+		
+		Question question = new Question();
+		question.tOQ = Question.TypeOfQuestion.values()[((int)(Math.random() * Question.TypeOfQuestion.values().length))];
+		//sQuesType = Question.StringQuestionType.Director.toString();
+		//System.out.println(sQuesType);//Question.TypeOfQuestion.values()[((int)(Math.random() * Question.TypeOfQuestion.values().length))];
+		
+		//container.questionType = sQuesType;
+		//container.answers = new String[]{"Correct answer here","Wrong answer one string here", "Wrong answer two string here", "Wrong answer three string here"};
+		//containerMoviePosterImage;
+		
+		//add container to the return containers:
+		//tempQ.setContainer(container);
+		//returnQue.add(tempQ);
+
+	}
+	
+	
+	/**
+	 * Gets a string of infomation about a movie, puts the information into a Container
+	 * @param String queryAnswer
+	 * @return Container container - the container with the information filled in
+	 * @author Maiken Beate
+	 */
+	private Container saveInformationInContainer(String queryAnswer) {
+		
+		Container container = new Container();
+		String[] splitArray = queryAnswer.split("\"");
+		
+		for(int i = 0; i <splitArray.length; i++){
+			//save movie title
+			if(i == 1){
+				container.movieName = splitArray[i];
+			}
+			//save director name
+			else if(i == 3){
+				container.directorName = splitArray[i];
+			}
+			//save release date
+			else if(i == 5){
+				container.releaseDate = splitArray[i];
+			}
+		}
+		return container;
+	}
+	
+	
+	//this is just a test
+	private void getMoviesWithGross(){
+		
+		String s2 = 
+			  "PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>"
+			+ "PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>"
+			+ "PREFIX dc: <http://purl.org/dc/terms/>"
+			+ "PREFIX dbprop: <http://live.dbpedia.org/property/>"
+			+ "PREFIX foaf: <http://xmlns.com/foaf/0.1/>"
+			+ "SELECT ?film_title ?gross "
+			
+			+ "WHERE {"
+			+ "?film rdf:type <http://dbpedia.org/ontology/Film> ."
+			+ "?film rdfs:label ?film_title ."
+			+ "OPTIONAL {?film dbprop:gross ?gross .} "
+			//+ "?film dbprop:gross ?gross "
+			+ "} LIMIT 100";
+
+	        Query query = QueryFactory.create(s2); //s2 = the query above
+	        QueryExecution qExe = QueryExecutionFactory.sparqlService("http://dbpedia.org/sparql", query);
+	        
+	        ResultSet resultset = qExe.execSelect();
+	        ResultSetFormatter.out(System.out, resultset, query) ;    
 	}
 }

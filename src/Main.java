@@ -7,6 +7,5 @@ public class Main {
     {
     	/*semInfo = new SemanticInfo();
     	que = semInfo.getQuestion();*/
-    	
     }
 }
