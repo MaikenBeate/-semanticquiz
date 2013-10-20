@@ -17,7 +17,8 @@ public class SemanticInfo
 	
 	public SemanticInfo()
 	{
-		PropertyConfigurator.configure("log4j.properties");		
+		PropertyConfigurator.configure("log4j.properties");
+		//fetchMovieInformation();
 	}
 	
 	
@@ -85,8 +86,7 @@ public class SemanticInfo
 	public static void main(String[] args) {
 		
 		SemanticInfo sem = new SemanticInfo();
-		sem.fetchMovieInformation();
-		
+		sem.getMoviesWithHighGross();
 		 //temporary test
         for(Container container : containers){
         	System.out.println("Movie title: " + container.movieName + ", Director: " + container.directorName + ", Date: " + container.releaseDate);
@@ -142,28 +142,82 @@ public class SemanticInfo
 	}
 	
 	
-	//this is just a test
-	private void getMoviesWithGross(){
+	/**
+	 * Gets movies with low gross - difficult movies
+	 * @author Maiken Beate
+	 */
+	private void getMoviesWithLowGross(){
 		
-		String s2 = 
+		String queryString = 
 			  "PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>"
 			+ "PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>"
 			+ "PREFIX dc: <http://purl.org/dc/terms/>"
 			+ "PREFIX dbprop: <http://live.dbpedia.org/property/>"
 			+ "PREFIX foaf: <http://xmlns.com/foaf/0.1/>"
-			+ "SELECT ?film_title ?gross "
-			
-			+ "WHERE {"
-			+ "?film rdf:type <http://dbpedia.org/ontology/Film> ."
-			+ "?film rdfs:label ?film_title ."
-			+ "OPTIONAL {?film dbprop:gross ?gross .} "
-			//+ "?film dbprop:gross ?gross "
-			+ "} LIMIT 100";
+			+ "SELECT DISTINCT ?film_title ?gross WHERE {" 
+			+ "?film rdf:type <http://dbpedia.org/ontology/Film> .  " 
+			+		 "OPTIONAL{?film <http://dbpedia.org/property/gross>  ?gross .} ."
+			+		" ?film foaf:name ?film_title ."
+			+		 "FILTER (?gross < 100000000)"
+			+ "} LIMIT 10";
 
-	        Query query = QueryFactory.create(s2); //s2 = the query above
+	        Query query = QueryFactory.create(queryString);
 	        QueryExecution qExe = QueryExecutionFactory.sparqlService("http://dbpedia.org/sparql", query);
 	        
 	        ResultSet resultset = qExe.execSelect();
 	        ResultSetFormatter.out(System.out, resultset, query) ;    
 	}
+	
+	
+	/**
+	 * Gets movies with medium gross - medium difficult movies
+	 * @author Maiken Beate
+	 */
+	private void getMoviesWithMediumGross(){
+			
+			String queryString = 
+				  "PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>"
+				+ "PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>"
+				+ "PREFIX dc: <http://purl.org/dc/terms/>"
+				+ "PREFIX dbprop: <http://live.dbpedia.org/property/>"
+				+ "PREFIX foaf: <http://xmlns.com/foaf/0.1/>"
+				+ "SELECT DISTINCT ?film_title ?gross WHERE {" 
+				+ "?film rdf:type <http://dbpedia.org/ontology/Film> .  " 
+				+		 "OPTIONAL{?film <http://dbpedia.org/property/gross>  ?gross .} ."
+				+		" ?film foaf:name ?film_title ."
+				+		 "FILTER ((?gross > 100000000) && (?gross < 750000000))"
+				+ "} ";
+	
+		        Query query = QueryFactory.create(queryString);
+		        QueryExecution qExe = QueryExecutionFactory.sparqlService("http://dbpedia.org/sparql", query);
+		        
+		        ResultSet resultset = qExe.execSelect();
+		        ResultSetFormatter.out(System.out, resultset, query) ;    
+		}
+	
+	/**
+	 * Gets movies with high gross - easy movies
+	 * @author Maiken Beate
+	 */
+	private void getMoviesWithHighGross(){
+			
+			String queryString = 
+				  "PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>"
+				+ "PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>"
+				+ "PREFIX dc: <http://purl.org/dc/terms/>"
+				+ "PREFIX dbprop: <http://live.dbpedia.org/property/>"
+				+ "PREFIX foaf: <http://xmlns.com/foaf/0.1/>"
+				+ "SELECT DISTINCT ?film_title ?gross WHERE {" 
+				+ "?film rdf:type <http://dbpedia.org/ontology/Film> .  " 
+				+		 "OPTIONAL{?film <http://dbpedia.org/property/gross>  ?gross .} ."
+				+		" ?film foaf:name ?film_title ."
+				+		 "FILTER (?gross > 750000000)"
+				+ "} ";
+	
+		        Query query = QueryFactory.create(queryString);
+		        QueryExecution qExe = QueryExecutionFactory.sparqlService("http://dbpedia.org/sparql", query);
+		        
+		        ResultSet resultset = qExe.execSelect();
+		        ResultSetFormatter.out(System.out, resultset, query) ;    
+		}
 }
