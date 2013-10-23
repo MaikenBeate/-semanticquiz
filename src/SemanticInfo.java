@@ -62,7 +62,7 @@ public class SemanticInfo
 	 * Gets movies with low gross - difficult movies
 	 * @author Maiken Beate
 	 */
-	private void getMoviesWithLowGross(){
+	private void fetchMoviesWithLowGross(){
 		
 		String queryString = 
 			  "PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>"
@@ -93,7 +93,7 @@ public class SemanticInfo
 	 * Gets movies with medium gross - medium difficult movies
 	 * @author Maiken Beate
 	 */
-	private void getMoviesWithMediumGross(){
+	private void fetchMoviesWithMediumGross(){
 			
 			String queryString = 
 				  "PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>"
@@ -112,7 +112,11 @@ public class SemanticInfo
 		        QueryExecution qExe = QueryExecutionFactory.sparqlService("http://dbpedia.org/sparql", query);
 		        
 		        ResultSet resultset = qExe.execSelect();
-		        ResultSetFormatter.out(System.out, resultset, query) ;    
+		        
+		        ArrayList<String> movieTitlesWithLowGross = filterOutMovieTitles(resultset);
+		        for(String movieTitle : movieTitlesWithLowGross){
+		        	fetchMovieInformationFromLinkedMDB(movieTitle, "medium");
+		        }
 		}
 	
 	
@@ -120,7 +124,7 @@ public class SemanticInfo
 	 * Gets movies with high gross - easy movies
 	 * @author Maiken Beate
 	 */
-	private void getMoviesWithHighGross(){
+	private void fetchMoviesWithHighGross(){
 			
 			String queryString = 
 				  "PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>"
@@ -133,13 +137,17 @@ public class SemanticInfo
 				+		 "OPTIONAL{?film <http://dbpedia.org/property/gross>  ?gross .} ."
 				+		" ?film foaf:name ?film_title ."
 				+		 "FILTER (?gross > 750000000)"
-				+ "} ";
+				+ "} LIMIT 50";
 	
 		        Query query = QueryFactory.create(queryString);
 		        QueryExecution qExe = QueryExecutionFactory.sparqlService("http://dbpedia.org/sparql", query);
 		        
 		        ResultSet resultset = qExe.execSelect();
-		        ResultSetFormatter.out(System.out, resultset, query) ;    
+		        //ResultSetFormatter.out(System.out, resultset, query) ;
+		        ArrayList<String> movieTitlesWithLowGross = filterOutMovieTitles(resultset);
+		        for(String movieTitle : movieTitlesWithLowGross){
+		        	fetchMovieInformationFromLinkedMDB(movieTitle, "easy");
+		        }
 		}
 	
 	
@@ -250,7 +258,9 @@ public class SemanticInfo
 	public static void main(String[] args) {
 		
 		SemanticInfo sem = new SemanticInfo();
-		sem.getMoviesWithLowGross();
+		sem.fetchMoviesWithHighGross();
+		sem.fetchMoviesWithMediumGross();
+		sem.fetchMoviesWithLowGross();
 		 //temporary test
         for(Container container : containers){
         	System.out.println("Movie title: " + container.movieName + ", Director: " + container.directorName + ", Date: " + container.releaseDate + ", Difficulty Level: " + container.difficultyLevel);
