@@ -74,6 +74,34 @@ public class SemanticInfo
 	    }
 		        
 	}
+	
+	public void testMethodForUsingStringInput(String movieName){
+			
+			String queryString =
+					  "PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>"
+					+ "PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>"
+					+ "PREFIX dc: <http://purl.org/dc/terms/>"
+					+ "PREFIX movie: <http://data.linkedmdb.org/resource/movie/>"
+					+ "SELECT ?movieuri ?title ?directorName ?date "
+					+ "WHERE {"
+					+ 		"?movieuri dc:title \"" + movieName + "\" ."
+					+ 		"?movieuri movie:director ?directoruri ."
+					+ 		"?directoruri movie:director_name ?directorName ."
+					+ 		"?movieuri dc:date ?date " 
+					+ "} LIMIT 10";
+	
+	        Query query = QueryFactory.create(queryString);
+	        QueryExecution qExe = QueryExecutionFactory.sparqlService( "http://data.linkedmdb.org/sparql", query );
+	        ResultSet resultset = qExe.execSelect();
+	        
+	        //Making a Container and formulating a question for each movie
+	        while(resultset.hasNext())
+		    {
+	        	
+	        	System.out.println(resultset.next().toString());
+		    }
+			        
+		}
 
 	
 	public Question[] getQuestion()
@@ -86,7 +114,7 @@ public class SemanticInfo
 	public static void main(String[] args) {
 		
 		SemanticInfo sem = new SemanticInfo();
-		sem.getMoviesWithHighGross();
+		sem.getMoviesWithLowGross();
 		 //temporary test
         for(Container container : containers){
         	System.out.println("Movie title: " + container.movieName + ", Director: " + container.directorName + ", Date: " + container.releaseDate);
@@ -165,9 +193,14 @@ public class SemanticInfo
 	        QueryExecution qExe = QueryExecutionFactory.sparqlService("http://dbpedia.org/sparql", query);
 	        
 	        ResultSet resultset = qExe.execSelect();
-	        ResultSetFormatter.out(System.out, resultset, query) ;    
+	        //ResultSetFormatter.out(System.out, resultset, query) ;   
+	        
+	        ArrayList<String> movieTitlesWithLowGross = filterOutMovieTitles(resultset);
+	        for(String movieTitle : movieTitlesWithLowGross){
+	        	testMethodForUsingStringInput(movieTitle);
+	        }
 	}
-	
+
 	
 	/**
 	 * Gets movies with medium gross - medium difficult movies
@@ -195,6 +228,7 @@ public class SemanticInfo
 		        ResultSetFormatter.out(System.out, resultset, query) ;    
 		}
 	
+	
 	/**
 	 * Gets movies with high gross - easy movies
 	 * @author Maiken Beate
@@ -220,4 +254,36 @@ public class SemanticInfo
 		        ResultSet resultset = qExe.execSelect();
 		        ResultSetFormatter.out(System.out, resultset, query) ;    
 		}
+	
+	
+	/**
+	 * Extracts movietitles from a resultset of movies, and returns them in an arraylist
+	 * @param Resultset - resultset
+	 * @return ArrayList<String> movietitles
+	 * @author Maiken Beate
+	 */
+	private ArrayList<String> filterOutMovieTitles(ResultSet resultset) {
+		
+		ArrayList<String> movieTitles = new ArrayList<String>();
+		
+		while(resultset.hasNext())
+		{
+			String movieResult = resultset.next().toString();
+			String[] splitArray = movieResult.split("\"");
+			
+			for(int i = 0; i < splitArray.length; i++){
+				//save movie title
+				if(i == 1){
+					movieTitles.add(splitArray[i]);
+				}
+			}
+		
+			for(String result : movieTitles){
+				System.out.println(result);
+			}
+			
+		}
+		
+		return movieTitles;
+	}
 }
