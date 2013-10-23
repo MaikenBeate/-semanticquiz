@@ -84,7 +84,7 @@ public class SemanticInfo
 	        
 	        ArrayList<String> movieTitlesWithLowGross = filterOutMovieTitles(resultset);
 	        for(String movieTitle : movieTitlesWithLowGross){
-	        	fetchMovieInformationFromLinkedMDB(movieTitle);
+	        	fetchMovieInformationFromLinkedMDB(movieTitle, "hard");
 	        }
 	}
 
@@ -147,9 +147,10 @@ public class SemanticInfo
 	 * Queries LinkedMDB for information about a movie/movies with a specific movie tile, 
 	 * saves the information and formulates a questions based on the movie information
 	 * @param String movieTitle - a movie title
+	 * @param String difficultyLevel - relative to gross
 	 * @author Maiken Beate
 	 */
-	private void fetchMovieInformationFromLinkedMDB(String movieTitle){
+	private void fetchMovieInformationFromLinkedMDB(String movieTitle, String difficultyLevel){
 			
 			String queryString =
 					  "PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>"
@@ -172,7 +173,7 @@ public class SemanticInfo
 	        while(resultset.hasNext())
 		    {
 	        	//System.out.println(resultset.next().toString());
-	        	Container container = saveInformationInContainer(resultset.next().toString(), movieTitle);
+	        	Container container = saveInformationInContainer(resultset.next().toString(), movieTitle, difficultyLevel);
 	        	containers.add(container);
 	        	
 	        	makeQuestion(container);
@@ -212,16 +213,17 @@ public class SemanticInfo
 	/**
 	 * Gets a string of infomation about a movie, puts the information into a Container
 	 * @param String queryAnswer
+	 * @param String difficultyLevel - relative to gross
 	 * @return Container container - the container with the information filled in
 	 * @author Maiken Beate
 	 */
-	private Container saveInformationInContainer(String queryAnswer, String movieTitle) {
+	private Container saveInformationInContainer(String queryAnswer, String movieTitle, String difficultyLevel) {
 		
 		Container container = new Container();
 		String[] splitArray = queryAnswer.split("\"");
-		
-		//save movie title
+
 		container.movieName = movieTitle;
+		container.difficultyLevel = difficultyLevel;
 		
 		for(int i = 0; i <splitArray.length; i++){
 			//save director name
@@ -251,7 +253,7 @@ public class SemanticInfo
 		sem.getMoviesWithLowGross();
 		 //temporary test
         for(Container container : containers){
-        	System.out.println("Movie title: " + container.movieName + ", Director: " + container.directorName + ", Date: " + container.releaseDate);
+        	System.out.println("Movie title: " + container.movieName + ", Director: " + container.directorName + ", Date: " + container.releaseDate + ", Difficulty Level: " + container.difficultyLevel);
         }
 	}
 }
