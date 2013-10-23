@@ -39,89 +39,6 @@ public class SemanticInfo
 
 	
 	
-	/**
-	 * Queries LinkedMDB for information about 10 random movies (for now), saves the information and makes a list of
-	 * questions based on the movie information
-	 * @author Maiken Beate
-	 */
-	public void fetchMovieInformation(){
-		
-		String queryString =
-				  "PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>"
-				+ "PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>"
-				+ "PREFIX dc: <http://purl.org/dc/terms/>"
-				+ "PREFIX movie: <http://data.linkedmdb.org/resource/movie/>"
-				+ "SELECT ?title ?directorName ?date "
-				+ "WHERE {"
-				+ 		"?movieuri dc:title ?title ."
-				+ 		"?movieuri movie:director ?directoruri ."
-				+ 		"?directoruri movie:director_name ?directorName ."
-				+ 		"?movieuri dc:date ?date " 
-				+ "} LIMIT 10";
-
-        Query query = QueryFactory.create(queryString);
-        QueryExecution qExe = QueryExecutionFactory.sparqlService( "http://data.linkedmdb.org/sparql", query );
-        ResultSet resultset = qExe.execSelect();
-        
-        //Making a Container and formulating a question for each movie
-        while(resultset.hasNext())
-	    {
-        	
-        	Container container = saveInformationInContainer(resultset.next().toString());
-        	containers.add(container);
-        	
-	    	makeQuestion(container);
-	    }
-		        
-	}
-	
-	public void testMethodForUsingStringInput(String movieName){
-			
-			String queryString =
-					  "PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>"
-					+ "PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>"
-					+ "PREFIX dc: <http://purl.org/dc/terms/>"
-					+ "PREFIX movie: <http://data.linkedmdb.org/resource/movie/>"
-					+ "SELECT ?movieuri ?title ?directorName ?date "
-					+ "WHERE {"
-					+ 		"?movieuri dc:title \"" + movieName + "\" ."
-					+ 		"?movieuri movie:director ?directoruri ."
-					+ 		"?directoruri movie:director_name ?directorName ."
-					+ 		"?movieuri dc:date ?date " 
-					+ "} LIMIT 10";
-	
-	        Query query = QueryFactory.create(queryString);
-	        QueryExecution qExe = QueryExecutionFactory.sparqlService( "http://data.linkedmdb.org/sparql", query );
-	        ResultSet resultset = qExe.execSelect();
-	        
-	        //Making a Container and formulating a question for each movie
-	        while(resultset.hasNext())
-		    {
-	        	
-	        	System.out.println(resultset.next().toString());
-		    }
-			        
-		}
-
-	
-	public Question[] getQuestion()
-	{
-		return (Question[])returnQue.toArray();
-	}
-	
-	
-	//temporary
-	public static void main(String[] args) {
-		
-		SemanticInfo sem = new SemanticInfo();
-		sem.getMoviesWithLowGross();
-		 //temporary test
-        for(Container container : containers){
-        	System.out.println("Movie title: " + container.movieName + ", Director: " + container.directorName + ", Date: " + container.releaseDate);
-        }
-	}
-	
-	
 	//John sin oppgave
 	private void makeQuestion(Container container) {
 		
@@ -138,35 +55,6 @@ public class SemanticInfo
 		//tempQ.setContainer(container);
 		//returnQue.add(tempQ);
 
-	}
-	
-	
-	/**
-	 * Gets a string of infomation about a movie, puts the information into a Container
-	 * @param String queryAnswer
-	 * @return Container container - the container with the information filled in
-	 * @author Maiken Beate
-	 */
-	private Container saveInformationInContainer(String queryAnswer) {
-		
-		Container container = new Container();
-		String[] splitArray = queryAnswer.split("\"");
-		
-		for(int i = 0; i <splitArray.length; i++){
-			//save movie title
-			if(i == 1){
-				container.movieName = splitArray[i];
-			}
-			//save director name
-			else if(i == 3){
-				container.directorName = splitArray[i];
-			}
-			//save release date
-			else if(i == 5){
-				container.releaseDate = splitArray[i];
-			}
-		}
-		return container;
 	}
 	
 	
@@ -192,12 +80,11 @@ public class SemanticInfo
 	        Query query = QueryFactory.create(queryString);
 	        QueryExecution qExe = QueryExecutionFactory.sparqlService("http://dbpedia.org/sparql", query);
 	        
-	        ResultSet resultset = qExe.execSelect();
-	        //ResultSetFormatter.out(System.out, resultset, query) ;   
+	        ResultSet resultset = qExe.execSelect();  
 	        
 	        ArrayList<String> movieTitlesWithLowGross = filterOutMovieTitles(resultset);
 	        for(String movieTitle : movieTitlesWithLowGross){
-	        	testMethodForUsingStringInput(movieTitle);
+	        	fetchMovieInformationFromLinkedMDB(movieTitle);
 	        }
 	}
 
@@ -257,6 +144,44 @@ public class SemanticInfo
 	
 	
 	/**
+	 * Queries LinkedMDB for information about a movie/movies with a specific movie tile, 
+	 * saves the information and formulates a questions based on the movie information
+	 * @param String movieTitle - a movie title
+	 * @author Maiken Beate
+	 */
+	private void fetchMovieInformationFromLinkedMDB(String movieTitle){
+			
+			String queryString =
+					  "PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>"
+					+ "PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>"
+					+ "PREFIX dc: <http://purl.org/dc/terms/>"
+					+ "PREFIX movie: <http://data.linkedmdb.org/resource/movie/>"
+					+ "SELECT ?movieuri ?title ?directorName ?date "
+					+ "WHERE {"
+					+ 		"?movieuri dc:title \"" + movieTitle + "\" ."
+					+ 		"?movieuri movie:director ?directoruri ."
+					+ 		"?directoruri movie:director_name ?directorName ."
+					+ 		"?movieuri dc:date ?date " 
+					+ "} ";
+	
+	        Query query = QueryFactory.create(queryString);
+	        QueryExecution qExe = QueryExecutionFactory.sparqlService( "http://data.linkedmdb.org/sparql", query );
+	        ResultSet resultset = qExe.execSelect();
+	        
+	        //Making a Container and formulating a question for each movie
+	        while(resultset.hasNext())
+		    {
+	        	//System.out.println(resultset.next().toString());
+	        	Container container = saveInformationInContainer(resultset.next().toString(), movieTitle);
+	        	containers.add(container);
+	        	
+	        	makeQuestion(container);
+		    }
+	              
+		}
+	
+	
+	/**
 	 * Extracts movietitles from a resultset of movies, and returns them in an arraylist
 	 * @param Resultset - resultset
 	 * @return ArrayList<String> movietitles
@@ -277,13 +202,56 @@ public class SemanticInfo
 					movieTitles.add(splitArray[i]);
 				}
 			}
-		
-			for(String result : movieTitles){
-				System.out.println(result);
-			}
 			
 		}
 		
 		return movieTitles;
+	}
+	
+	
+	/**
+	 * Gets a string of infomation about a movie, puts the information into a Container
+	 * @param String queryAnswer
+	 * @return Container container - the container with the information filled in
+	 * @author Maiken Beate
+	 */
+	private Container saveInformationInContainer(String queryAnswer, String movieTitle) {
+		
+		Container container = new Container();
+		String[] splitArray = queryAnswer.split("\"");
+		
+		//save movie title
+		container.movieName = movieTitle;
+		
+		for(int i = 0; i <splitArray.length; i++){
+			//save director name
+			if(i == 1){
+				container.directorName = splitArray[i];
+			}
+			//save release date
+			else if(i == 3){
+				container.releaseDate = splitArray[i];
+			}
+
+		}
+		return container;
+	}
+	
+	
+	public Question[] getQuestion()
+	{
+		return (Question[])returnQue.toArray();
+	}
+	
+	
+	//temporary
+	public static void main(String[] args) {
+		
+		SemanticInfo sem = new SemanticInfo();
+		sem.getMoviesWithLowGross();
+		 //temporary test
+        for(Container container : containers){
+        	System.out.println("Movie title: " + container.movieName + ", Director: " + container.directorName + ", Date: " + container.releaseDate);
+        }
 	}
 }
