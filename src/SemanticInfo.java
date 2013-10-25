@@ -3,22 +3,36 @@ import java.util.List;
 
 import org.apache.log4j.PropertyConfigurator;
 
+import com.hp.hpl.jena.query.Dataset;
 import com.hp.hpl.jena.query.Query;
 import com.hp.hpl.jena.query.QueryExecution;
 import com.hp.hpl.jena.query.QueryExecutionFactory;
 import com.hp.hpl.jena.query.QueryFactory;
 import com.hp.hpl.jena.query.ResultSet;
 import com.hp.hpl.jena.query.ResultSetFormatter;
+import com.hp.hpl.jena.rdf.model.Model;
+import com.hp.hpl.jena.tdb.TDBFactory;
+import com.hp.hpl.jena.util.FileManager;
 
 public class SemanticInfo 
 {
 	private static List<Question> returnQue = new ArrayList<Question>();
 	private static ArrayList<Container> containers = new ArrayList<Container>();
+	private Model tdb;
 	
 	public SemanticInfo()
 	{
 		PropertyConfigurator.configure("log4j.properties");
 		//fetchMovieInformation();
+		String directory = "./tdb";
+		Dataset dataset = TDBFactory.createDataset(directory);
+		tdb = dataset.getDefaultModel();
+		
+		String source = "linkedmdb\\linkedmdb-latest-dump.nt";
+		FileManager.get().readModel(tdb, source, "N-TRIPLES");
+		
+		
+		tdb.close() ;
 	}
 	
 	
@@ -174,8 +188,13 @@ public class SemanticInfo
 					+ "} ";
 	
 	        Query query = QueryFactory.create(queryString);
-	        QueryExecution qExe = QueryExecutionFactory.sparqlService( "http://data.linkedmdb.org/sparql", query );
-	        ResultSet resultset = qExe.execSelect();
+	        //QueryExecution qExe = QueryExecutionFactory.sparqlService( "http://data.linkedmdb.org/sparql", query );
+
+	        QueryExecution qexec = QueryExecutionFactory.create(query, tdb) ;
+	        ResultSet resultset = qexec.execSelect() ;
+	        //ResultSetFormatter.out(resultset) ;
+	        
+	        //ResultSet resultset = qExe.execSelect();
 	        
 	        //Making a Container and formulating a question for each movie
 	        while(resultset.hasNext())
