@@ -23,7 +23,7 @@ public class SemanticInfo
 	public SemanticInfo()
 	{
 		PropertyConfigurator.configure("log4j.properties");
-		//fetchMovieInformation();
+
 		String directory = "./tdb";
 		Dataset dataset = TDBFactory.createDataset(directory);
 		tdb = dataset.getDefaultModel();
@@ -84,17 +84,18 @@ public class SemanticInfo
 			+ "PREFIX dc: <http://purl.org/dc/terms/>"
 			+ "PREFIX dbprop: <http://live.dbpedia.org/property/>"
 			+ "PREFIX foaf: <http://xmlns.com/foaf/0.1/>"
-			+ "SELECT DISTINCT ?film_title ?gross WHERE {" 
+			+ "SELECT DISTINCT ?film_title WHERE {" 
 			+ "?film rdf:type <http://dbpedia.org/ontology/Film> .  " 
 			+		 "OPTIONAL{?film <http://dbpedia.org/property/gross>  ?gross .} ."
-			+		" ?film foaf:name ?film_title ."
+			+		 "?film foaf:name ?film_title ."
+			+        "?film dc:subject <http://dbpedia.org/resource/Category:English-language_films>  ."
 			+		 "FILTER (?gross < 100000000)"
-			+ "} LIMIT 10";
+			+ "} LIMIT 100";
 
 	        Query query = QueryFactory.create(queryString);
-	        QueryExecution qExe = QueryExecutionFactory.sparqlService("http://dbpedia.org/sparql", query);
-	        
+	        QueryExecution qExe = QueryExecutionFactory.sparqlService("http://live.dbpedia.org/sparql", query);
 	        ResultSet resultset = qExe.execSelect();  
+	        //ResultSetFormatter.out(System.out, resultset, query) ;
 	        
 	        ArrayList<String> movieTitlesWithLowGross = filterOutMovieTitles(resultset);
 	        for(String movieTitle : movieTitlesWithLowGross){
@@ -115,18 +116,18 @@ public class SemanticInfo
 				+ "PREFIX dc: <http://purl.org/dc/terms/>"
 				+ "PREFIX dbprop: <http://live.dbpedia.org/property/>"
 				+ "PREFIX foaf: <http://xmlns.com/foaf/0.1/>"
-				+ "SELECT DISTINCT ?film_title ?gross WHERE {" 
+				+ "SELECT DISTINCT ?film_title ?cat WHERE {" 
 				+ "?film rdf:type <http://dbpedia.org/ontology/Film> .  " 
 				+		 "OPTIONAL{?film <http://dbpedia.org/property/gross>  ?gross .} ."
-				+		" ?film foaf:name ?film_title ."
-				+		 "FILTER ((?gross > 100000000) && (?gross < 750000000))"
-				+ "} ";
+				+		 "?film foaf:name ?film_title ."
+				+        "?film dc:subject <http://dbpedia.org/resource/Category:English-language_films> ."
+				+		 "FILTER (?gross > 100000000)"//  no upper limit because of the results
+				+ "} LIMIT 100";
 	
 		        Query query = QueryFactory.create(queryString);
-		        QueryExecution qExe = QueryExecutionFactory.sparqlService("http://dbpedia.org/sparql", query);
-		        
+		        QueryExecution qExe = QueryExecutionFactory.sparqlService("http://live.dbpedia.org/sparql", query); 
 		        ResultSet resultset = qExe.execSelect();
-		        
+
 		        ArrayList<String> movieTitlesWithLowGross = filterOutMovieTitles(resultset);
 		        for(String movieTitle : movieTitlesWithLowGross){
 		        	fetchMovieInformationFromLinkedMDB(movieTitle, "medium");
@@ -145,19 +146,20 @@ public class SemanticInfo
 				+ "PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>"
 				+ "PREFIX dc: <http://purl.org/dc/terms/>"
 				+ "PREFIX dbprop: <http://live.dbpedia.org/property/>"
+				+"PREFIX skos: <http://www.w3.org/2004/02/skos/core#>"
 				+ "PREFIX foaf: <http://xmlns.com/foaf/0.1/>"
-				+ "SELECT DISTINCT ?film_title ?gross WHERE {" 
+				+ "SELECT DISTINCT ?film_title WHERE {" 
 				+ "?film rdf:type <http://dbpedia.org/ontology/Film> .  " 
-				+		 "OPTIONAL{?film <http://dbpedia.org/property/gross>  ?gross .} ."
-				+		" ?film foaf:name ?film_title ."
+				+		"OPTIONAL{?film <http://dbpedia.org/property/gross>  ?gross .} ."
+				+		"?film foaf:name ?film_title ."
+				+		"?film dc:subject <http://dbpedia.org/resource/Category:American_films> ."
 				+		 "FILTER (?gross > 750000000)"
-				+ "} LIMIT 50";
+				+ "} LIMIT 100";
 	
 		        Query query = QueryFactory.create(queryString);
-		        QueryExecution qExe = QueryExecutionFactory.sparqlService("http://dbpedia.org/sparql", query);
-		        
+		        QueryExecution qExe = QueryExecutionFactory.sparqlService("http://live.dbpedia.org/sparql", query);
 		        ResultSet resultset = qExe.execSelect();
-		        //ResultSetFormatter.out(System.out, resultset, query) ;
+		        
 		        ArrayList<String> movieTitlesWithLowGross = filterOutMovieTitles(resultset);
 		        for(String movieTitle : movieTitlesWithLowGross){
 		        	fetchMovieInformationFromLinkedMDB(movieTitle, "easy");
@@ -179,20 +181,21 @@ public class SemanticInfo
 					+ "PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>"
 					+ "PREFIX dc: <http://purl.org/dc/terms/>"
 					+ "PREFIX movie: <http://data.linkedmdb.org/resource/movie/>"
-					+ "SELECT ?movieuri ?title ?directorName ?date "
+					+ "SELECT DISTINCT "
+					+ "?movieuri ?title ?directorName ?date "
 					+ "WHERE {"
 					+ 		"?movieuri dc:title \"" + movieTitle + "\" ."
 					+ 		"?movieuri movie:director ?directoruri ."
 					+ 		"?directoruri movie:director_name ?directorName ."
 					+ 		"?movieuri dc:date ?date " 
-					+ "} ";
+					+ "} LIMIT 1";
 	
 	        Query query = QueryFactory.create(queryString);
 	        //QueryExecution qExe = QueryExecutionFactory.sparqlService( "http://data.linkedmdb.org/sparql", query );
 
 	        QueryExecution qexec = QueryExecutionFactory.create(query, tdb) ;
 	        ResultSet resultset = qexec.execSelect() ;
-	        //ResultSetFormatter.out(resultset) ;
+	        // ResultSetFormatter.out(resultset) ;
 	        
 	        //ResultSet resultset = qExe.execSelect();
 	        
@@ -223,9 +226,8 @@ public class SemanticInfo
 		{
 			String movieResult = resultset.next().toString();
 			String[] splitArray = movieResult.split("\"");
-			
+
 			for(int i = 0; i < splitArray.length; i++){
-				//save movie title
 				if(i == 1){
 					movieTitles.add(splitArray[i]);
 				}
@@ -255,11 +257,11 @@ public class SemanticInfo
 		for(int i = 0; i <splitArray.length; i++){
 			//save director name
 			if(i == 1){
-				container.directorName = splitArray[i];
+				container.releaseDate = splitArray[i];
 			}
 			//save release date
 			else if(i == 3){
-				container.releaseDate = splitArray[i];
+				container.directorName = splitArray[i];
 			}
 
 		}
