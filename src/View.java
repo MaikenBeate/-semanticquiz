@@ -1,10 +1,7 @@
 import java.awt.BorderLayout;
 import java.awt.Container;
-<<<<<<< HEAD
-=======
 import java.awt.Dimension;
 import java.awt.GridBagLayout;
->>>>>>> 88c23a518e93d187aa61efb69107fac56525d48f
 
 import javax.swing.ButtonGroup;
 import javax.swing.ImageIcon;
