@@ -13,7 +13,7 @@ public class Question {
 	public Question()
 	{
 		answered = false;
-		//iQ = ImageQuestion.values()[((int)(Math.random() * ImageQuestion.values().length-1))];
+		//iQ = ImageQuestion.values()[((int)(Math.random() * ImageQuestion.values().length))];
 		sQ = StringQuestionType.values()[((int)(Math.random() * StringQuestionType.values().length))];
 	}
 	public static void GenerateQuestion()

@@ -1,7 +1,5 @@
 import java.awt.BorderLayout;
 import java.awt.Container;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
@@ -96,10 +94,10 @@ public class View extends JFrame{
 	 * @param args 
 	 * Temporary
 	 */
-	public static void main(String[] args) {
+	/*public static void main(String[] args) {
 		View view = new View();
 
-	}
+	}*/
 
 
 
