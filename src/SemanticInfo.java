@@ -125,7 +125,7 @@ public class SemanticInfo
 				+ "} LIMIT 100";
 	
 		        Query query = QueryFactory.create(queryString);
-		        QueryExecution qExe = QueryExecutionFactory.sparqlService("http://live.dbpedia.org/sparql", query); 
+		        QueryExecution qExe = QueryExecutionFactory.sparqlService("http://live.dbpedia.org/sparql", query);
 		        ResultSet resultset = qExe.execSelect();
 
 		        ArrayList<String> movieTitlesWithLowGross = filterOutMovieTitles(resultset);
