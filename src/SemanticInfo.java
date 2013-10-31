@@ -1,6 +1,6 @@
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
-
 import org.apache.log4j.PropertyConfigurator;
 
 import com.hp.hpl.jena.query.Dataset;
@@ -12,7 +12,6 @@ import com.hp.hpl.jena.query.ResultSet;
 import com.hp.hpl.jena.query.ResultSetFormatter;
 import com.hp.hpl.jena.rdf.model.Model;
 import com.hp.hpl.jena.tdb.TDBFactory;
-import com.hp.hpl.jena.util.FileManager;
 
 public class SemanticInfo 
 {
@@ -28,8 +27,8 @@ public class SemanticInfo
 		Dataset dataset = TDBFactory.createDataset(directory);
 		tdb = dataset.getDefaultModel();
 		
-		String source = "linkedmdb\\linkedmdb-latest-dump.nt";
-		FileManager.get().readModel(tdb, source, "N-TRIPLES");
+		//String source = "linkedmdb\\linkedmdb-latest-dump.nt";
+		//FileManager.get().readModel(tdb, source, "N-TRIPLES");
 		
 		
 		tdb.close() ;
@@ -84,12 +83,12 @@ public class SemanticInfo
 			+ "PREFIX dc: <http://purl.org/dc/terms/>"
 			+ "PREFIX dbprop: <http://live.dbpedia.org/property/>"
 			+ "PREFIX foaf: <http://xmlns.com/foaf/0.1/>"
-			+ "SELECT DISTINCT ?film_title WHERE {" 
+			+ "SELECT DISTINCT ?film_title ?description WHERE {" 
 			+ "?film rdf:type <http://dbpedia.org/ontology/Film> .  " 
-			+		 "OPTIONAL{?film <http://dbpedia.org/property/gross>  ?gross .} ."
-			+		 "?film foaf:name ?film_title ."
-			+        "?film dc:subject <http://dbpedia.org/resource/Category:English-language_films>  ."
-			+		 "FILTER (?gross < 100000000)"
+			+		"?film foaf:name ?film_title ."
+			+       "?film dc:subject <http://dbpedia.org/resource/Category:English-language_films>  ."
+			+		"?film rdfs:comment ?description ."
+			+		"FILTER(langMatches(lang(?description),\"EN\")) "
 			+ "} LIMIT 100";
 
 	        Query query = QueryFactory.create(queryString);
@@ -97,9 +96,9 @@ public class SemanticInfo
 	        ResultSet resultset = qExe.execSelect();  
 	        //ResultSetFormatter.out(System.out, resultset, query) ;
 	        
-	        ArrayList<String> movieTitlesWithLowGross = filterOutMovieTitles(resultset);
-	        for(String movieTitle : movieTitlesWithLowGross){
-	        	fetchMovieInformationFromLinkedMDB(movieTitle, "hard");
+	        HashMap<String,String> movieTitlesAndDescription = filterOutMovieTitles(resultset);
+	        for(String movieTitle : movieTitlesAndDescription.keySet()){
+	        	fetchMovieInformationFromLinkedMDB(movieTitle, movieTitlesAndDescription.get(movieTitle), "hard");
 	        }
 	}
 
@@ -116,21 +115,24 @@ public class SemanticInfo
 				+ "PREFIX dc: <http://purl.org/dc/terms/>"
 				+ "PREFIX dbprop: <http://live.dbpedia.org/property/>"
 				+ "PREFIX foaf: <http://xmlns.com/foaf/0.1/>"
-				+ "SELECT DISTINCT ?film_title ?cat WHERE {" 
+				+ "SELECT DISTINCT ?film_title ?description WHERE {" 
 				+ "?film rdf:type <http://dbpedia.org/ontology/Film> .  " 
-				+		 "OPTIONAL{?film <http://dbpedia.org/property/gross>  ?gross .} ."
-				+		 "?film foaf:name ?film_title ."
-				+        "?film dc:subject <http://dbpedia.org/resource/Category:English-language_films> ."
-				+		 "FILTER (?gross > 100000000)"//  no upper limit because of the results
+				+		"OPTIONAL{?film <http://dbpedia.org/property/gross>  ?gross .} ."
+				+		"?film foaf:name ?film_title ."
+				+       "?film dc:subject <http://dbpedia.org/resource/Category:English-language_films> ."
+				+		"?film rdfs:comment ?description ."
+				+		"FILTER(langMatches(lang(?description),\"EN\") && (?gross > 100000000))"
 				+ "} LIMIT 100";
 	
+			
+			
 		        Query query = QueryFactory.create(queryString);
-		        QueryExecution qExe = QueryExecutionFactory.sparqlService("http://live.dbpedia.org/sparql", query);
+		        QueryExecution qExe = QueryExecutionFactory.sparqlService("http://live.dbpedia.org/sparql", query); 
 		        ResultSet resultset = qExe.execSelect();
 
-		        ArrayList<String> movieTitlesWithLowGross = filterOutMovieTitles(resultset);
-		        for(String movieTitle : movieTitlesWithLowGross){
-		        	fetchMovieInformationFromLinkedMDB(movieTitle, "medium");
+		        HashMap<String,String> movieTitlesAndDescription = filterOutMovieTitles(resultset);
+		        for(String movieTitle : movieTitlesAndDescription.keySet()){
+		        	fetchMovieInformationFromLinkedMDB(movieTitle, movieTitlesAndDescription.get(movieTitle), "medium");
 		        }
 		}
 	
@@ -148,21 +150,25 @@ public class SemanticInfo
 				+ "PREFIX dbprop: <http://live.dbpedia.org/property/>"
 				+"PREFIX skos: <http://www.w3.org/2004/02/skos/core#>"
 				+ "PREFIX foaf: <http://xmlns.com/foaf/0.1/>"
-				+ "SELECT DISTINCT ?film_title WHERE {" 
+				+ "SELECT DISTINCT ?film_title ?description WHERE {" 
 				+ "?film rdf:type <http://dbpedia.org/ontology/Film> .  " 
 				+		"OPTIONAL{?film <http://dbpedia.org/property/gross>  ?gross .} ."
 				+		"?film foaf:name ?film_title ."
 				+		"?film dc:subject <http://dbpedia.org/resource/Category:American_films> ."
-				+		 "FILTER (?gross > 750000000)"
+				+		"?film rdfs:comment ?description ."
+				+		"FILTER(langMatches(lang(?description),\"EN\") && (?gross > 750000000))"
+				//+		"FILTER (?gross > 750000000)"
 				+ "} LIMIT 100";
 	
 		        Query query = QueryFactory.create(queryString);
 		        QueryExecution qExe = QueryExecutionFactory.sparqlService("http://live.dbpedia.org/sparql", query);
 		        ResultSet resultset = qExe.execSelect();
 		        
-		        ArrayList<String> movieTitlesWithLowGross = filterOutMovieTitles(resultset);
-		        for(String movieTitle : movieTitlesWithLowGross){
-		        	fetchMovieInformationFromLinkedMDB(movieTitle, "easy");
+		        //ResultSetFormatter.out(System.out, resultset, query) ;
+		        
+		        HashMap<String,String> movieTitlesAndDescription = filterOutMovieTitles(resultset);
+		        for(String movieTitle : movieTitlesAndDescription.keySet()){
+		        	fetchMovieInformationFromLinkedMDB(movieTitle, movieTitlesAndDescription.get(movieTitle), "easy");
 		        }
 		}
 	
@@ -174,7 +180,7 @@ public class SemanticInfo
 	 * @param String difficultyLevel - relative to gross
 	 * @author Maiken Beate
 	 */
-	private void fetchMovieInformationFromLinkedMDB(String movieTitle, String difficultyLevel){
+	private void fetchMovieInformationFromLinkedMDB(String title, String description, String difficultyLevel){
 			
 			String queryString =
 					  "PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>"
@@ -184,7 +190,7 @@ public class SemanticInfo
 					+ "SELECT DISTINCT "
 					+ "?movieuri ?title ?directorName ?date "
 					+ "WHERE {"
-					+ 		"?movieuri dc:title \"" + movieTitle + "\" ."
+					+ 		"?movieuri dc:title \"" + title + "\" ."
 					+ 		"?movieuri movie:director ?directoruri ."
 					+ 		"?directoruri movie:director_name ?directorName ."
 					+ 		"?movieuri dc:date ?date " 
@@ -203,14 +209,14 @@ public class SemanticInfo
 	        while(resultset.hasNext())
 		    {
 	        	//System.out.println(resultset.next().toString());
-	        	Container container = saveInformationInContainer(resultset.next().toString(), movieTitle, difficultyLevel);
+	        	Container container = saveInformationInContainer(resultset.next().toString(), title, description, difficultyLevel);
 	        	containers.add(container);
 	        	
 	        	makeQuestion(container);
 		    }
 	              
 		}
-	
+
 	
 	/**
 	 * Extracts movietitles from a resultset of movies, and returns them in an arraylist
@@ -218,24 +224,40 @@ public class SemanticInfo
 	 * @return ArrayList<String> movietitles
 	 * @author Maiken Beate
 	 */
-	private ArrayList<String> filterOutMovieTitles(ResultSet resultset) {
+	private HashMap<String, String> filterOutMovieTitles(ResultSet resultset) {
 		
-		ArrayList<String> movieTitles = new ArrayList<String>();
+		HashMap<String, String> movieTitlesAndDescription = new HashMap<String, String>();
 		
 		while(resultset.hasNext())
 		{
 			String movieResult = resultset.next().toString();
-			String[] splitArray = movieResult.split("\"");
 
-			for(int i = 0; i < splitArray.length; i++){
-				if(i == 1){
-					movieTitles.add(splitArray[i]);
+			
+			//System.out.println(orCount);
+			String[] splitArray = movieResult.split("\"");
+			
+
+			String title = "";
+			String description = "";
+
+			for (int i = 0; i < splitArray.length; i++) {
+				if (i == 1) {
+					//movieTitles.add(splitArray[i]);
+					description = splitArray[i];
 				}
+				else if( i == 3){
+					title = splitArray[i];
+				}
+			}
+			
+			//remove misformed information
+			if(title.length() <= 35 && title.length() > 4){
+				movieTitlesAndDescription.put(title, description);
 			}
 			
 		}
 		
-		return movieTitles;
+		return movieTitlesAndDescription;
 	}
 	
 	
@@ -246,12 +268,13 @@ public class SemanticInfo
 	 * @return Container container - the container with the information filled in
 	 * @author Maiken Beate
 	 */
-	private Container saveInformationInContainer(String queryAnswer, String movieTitle, String difficultyLevel) {
+	private Container saveInformationInContainer(String queryAnswer, String title, String description, String difficultyLevel) {
 		
 		Container container = new Container();
 		String[] splitArray = queryAnswer.split("\"");
 
-		container.movieName = movieTitle;
+		container.movieName = title;
+		container.description = description;
 		container.difficultyLevel = difficultyLevel;
 		
 		for(int i = 0; i <splitArray.length; i++){
@@ -279,12 +302,12 @@ public class SemanticInfo
 	public static void main(String[] args) {
 		
 		SemanticInfo sem = new SemanticInfo();
-		sem.fetchMoviesWithHighGross();
+	    sem.fetchMoviesWithHighGross();
 		sem.fetchMoviesWithMediumGross();
 		sem.fetchMoviesWithLowGross();
 		 //temporary test
         for(Container container : containers){
-        	System.out.println("Movie title: " + container.movieName + ", Director: " + container.directorName + ", Date: " + container.releaseDate + ", Difficulty Level: " + container.difficultyLevel);
+        	System.out.println("Movie title: " + container.movieName + ", Director: " + container.directorName + ", Date: " + container.releaseDate + " Desc: " + container.description + ", Difficulty Level: " + container.difficultyLevel);
         }
 	}
 }
