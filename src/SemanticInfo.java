@@ -148,16 +148,17 @@ public class SemanticInfo
 				+ "PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>"
 				+ "PREFIX dc: <http://purl.org/dc/terms/>"
 				+ "PREFIX dbprop: <http://live.dbpedia.org/property/>"
-				+"PREFIX skos: <http://www.w3.org/2004/02/skos/core#>"
+				+ "PREFIX skos: <http://www.w3.org/2004/02/skos/core#>"
 				+ "PREFIX foaf: <http://xmlns.com/foaf/0.1/>"
+				+ "PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>"
 				+ "SELECT DISTINCT ?film_title ?description WHERE {" 
 				+ "?film rdf:type <http://dbpedia.org/ontology/Film> .  " 
 				+		"OPTIONAL{?film <http://dbpedia.org/property/gross>  ?gross .} ."
 				+		"?film foaf:name ?film_title ."
-				+		"?film dc:subject <http://dbpedia.org/resource/Category:American_films> ."
+				+ 		"?film <http://dbpedia.org/ontology/releaseDate> ?released ."
 				+		"?film rdfs:comment ?description ."
-				+		"FILTER(langMatches(lang(?description),\"EN\") && (?gross > 750000000))"
-				//+		"FILTER (?gross > 750000000)"
+				+		"?film dc:subject <http://dbpedia.org/resource/Category:American_films> ."
+				+		"FILTER(langMatches(lang(?description),\"EN\") && (?released  >= xsd:dateTime(\"1990-01-01\")) && (?gross > 750000000))" //må fungere
 				+ "} LIMIT 100";
 	
 		        Query query = QueryFactory.create(queryString);
@@ -168,6 +169,7 @@ public class SemanticInfo
 		        
 		        HashMap<String,String> movieTitlesAndDescription = filterOutMovieTitles(resultset);
 		        for(String movieTitle : movieTitlesAndDescription.keySet()){
+
 		        	fetchMovieInformationFromLinkedMDB(movieTitle, movieTitlesAndDescription.get(movieTitle), "easy");
 		        }
 		}
@@ -193,9 +195,9 @@ public class SemanticInfo
 					+ 		"?movieuri dc:title \"" + title + "\" ."
 					+ 		"?movieuri movie:director ?directoruri ."
 					+ 		"?directoruri movie:director_name ?directorName ."
-					+ 		"?movieuri dc:date ?date " 
+					+ 		"?movieuri dc:date ?date ." 
 					+ "} LIMIT 1";
-	
+			
 	        Query query = QueryFactory.create(queryString);
 	        //QueryExecution qExe = QueryExecutionFactory.sparqlService( "http://data.linkedmdb.org/sparql", query );
 
@@ -232,8 +234,6 @@ public class SemanticInfo
 		{
 			String movieResult = resultset.next().toString();
 
-			
-			//System.out.println(orCount);
 			String[] splitArray = movieResult.split("\"");
 			
 
@@ -242,7 +242,6 @@ public class SemanticInfo
 
 			for (int i = 0; i < splitArray.length; i++) {
 				if (i == 1) {
-					//movieTitles.add(splitArray[i]);
 					description = splitArray[i];
 				}
 				else if( i == 3){
@@ -251,7 +250,7 @@ public class SemanticInfo
 			}
 			
 			//remove misformed information
-			if(title.length() <= 35 && title.length() > 4){
+			if(title.length() <= 35 && title.length() > 6 && !title.equals("(Untitled)")){
 				movieTitlesAndDescription.put(title, description);
 			}
 			

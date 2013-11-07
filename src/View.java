@@ -330,14 +330,14 @@ public class View extends JFrame{
 	}
 
 
-	/**
-	 * @param args 
-	 * Temporary
-	 */
-	/*public static void main(String[] args) {
-		View view = new View();
-		
-
-	}*/
+//	/**
+//	 * @param args 
+//	 * Temporary
+//	 */
+//	public static void main(String[] args) {
+//		View view = new View();
+//		
+//
+//	}
 
 }
