@@ -1,85 +1,98 @@
 public class Question {
 	
-	private static String questionString;
-	private static String questionAnswer;
-	private static boolean answered;
-	private static MovieQuestionType sQ;
+	public static String questionString;
+	public static String questionAnswer;
+	public static boolean answered, done;
 	public static TypeOfQuestion tOQ;
-	private static Container con;
+	public static Container con;
 	
+	public static void main (String args[]) 
+    {
+		tOQ = TypeOfQuestion.values()[((int)(Math.random() * Question.TypeOfQuestion.values().length))];
+    	GenerateQuestion();
+    	System.out.println(tOQ.getValue());
+    	System.out.println(questionString);
+    }
 	public Question()
 	{
 		answered = false;
-		//iQ = MovieImageQuestion.values()[((int)(Math.random() * MovieImageQuestion.values().length))];
-		sQ = MovieQuestionType.values()[((int)(Math.random() * MovieQuestionType.values().length))];
-		
 	}
 	public static void GenerateQuestion()
 	{		
-		String returnString = First.values()[tOQ.getValue().firstValue()].toString() 
+		String[] Preposition = new String[]{"which ", "who ", "what "};
+		String[] Postposition = new String[]{"was ", "is "};
+		String tempString = (tOQ.getValue().firstValue() > -1 ? Preposition[tOQ.getValue().firstValue()] : "")
 				+ tOQ.getValue().toString() 
-				+ (tOQ.getValue().secondValue() != 0? Second.values()[tOQ.getValue().secondValue()].toString() : "");
+				+ (tOQ.getValue().secondValue() > -1 ? Postposition[tOQ.getValue().secondValue()] : "") 
+				+ tOQ.getTypeString() 
+				+ "?";
+		tempString = StringManipulation.AddSpacesToReplaceZero(StringManipulation.FirstToUpperCase(tempString), false);
+		questionString = tempString;
 	}
 	
 	//Enum returns enum returns random enum type of selected enum type
 	public enum TypeOfQuestion{
-		MovieQuestion(sQ){
+		MovieQuestion(){
 			//Overrides return with relevant type and return cast
 			@Override 
 			public MovieQuestionType getValue(){
 				return (MovieQuestionType)this.value;
 			}
+			@Override
+			public String getTypeString(){
+				return "the movie ";
+			}
 		};
 		protected lowerTree value;
-		private TypeOfQuestion(lowerTree value){
-			this.value = value;
-	    }
+		private TypeOfQuestion(){
+			this.value = MovieQuestionType.values()[((int)(Math.random() * MovieQuestionType.values().length))];
+			this.value.setFirstSecond();
+		}
 	    public lowerTree getValue(){
 	    	return null;
 	    }
+	    public String getTypeString(){
+	    	return null;
+	    }
 	}
-	/*public enum PrepositionalStatements{Which(0) movie was(0) released in releaseDate, Who(1) directed moviename
-		
-	}*/
+	/*public enum PrepositionalStatements{Which(0) movie was(0) released in releaseDate, Who(1) directed moviename*/
+	/*String[] First = new String[]{" ", " which ", " who ", " what "};
+	String[] Second = new String[]{" ", " was ", " is "};*/
 	
 	public enum MovieQuestionType implements lowerTree{
-		movie(){
-			@Override
-			protected void setFirstSecond(){first = 1; second = 1;}
-			}, 
-			directed(){
+			directed≈(){
 				@Override
-				protected void setFirstSecond(){first = 2; second = 0;}
+				public void setFirstSecond(){first = 1; second = -1;}
 				}, 
-				≈genre≈(){
+				genre≈(){
 					@Override
-					protected void setFirstSecond(){first = 0; second = 0;}
+					public void setFirstSecond(){first = 2; second = 1;}
 					}, 
-					≈released≈in≈(){
+					date≈(){
 						@Override
-						protected void setFirstSecond(){first = 0; second = 0;}
+						public void setFirstSecond(){first = 2; second = 0;}
 						};
 		
 		private static int first;
 		private static int second;
 		MovieQuestionType(){}
 		@Override
-		public int firstValue() {
+		public int firstValue(){
 			return first;
 		}
 		@Override
 		public int secondValue(){
 			return second;
 		}
-		
-		protected void setFirstSecond(){}
 	}
-	public enum First{≈, ≈which≈, ≈who≈, ≈what≈}
-	public enum Second{≈, ≈was≈, ≈is≈}
 	
-	public String getQuestion()
+	/*public String getQuestion()
 	{
 		return questionString;
+	}
+	public String getCorrectAnswer()
+	{
+		return questionAnswer;
 	}
 	public boolean getAnswered()
 	{
@@ -89,9 +102,13 @@ public class Question {
 	{
 		answered = a;
 	}
-	public String getCorrectAnswer()
+	public boolean getDone()
 	{
-		return questionAnswer;
+		return done;
+	}
+	public void setDone(boolean d)
+	{
+		done = d;
 	}
 	public String[] getAllAnswers()
 	{
@@ -101,13 +118,14 @@ public class Question {
 	{
 		return con;
 	}
-	public void setContainer(Container a)
+	public void setContainer(Container c)
 	{
-		con = a;
-	}
+		con = c;
+	}*/
 }
 //Empty interface to signify that object is lower in enum tree
 interface lowerTree{
 	public int firstValue();
 	public int secondValue();
+	public void setFirstSecond();
 }
