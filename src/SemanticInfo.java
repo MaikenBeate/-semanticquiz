@@ -17,7 +17,7 @@ public class SemanticInfo
 	private static List<Question> returnQue = new ArrayList<Question>();
 	private static ArrayList<Container> containers = new ArrayList<Container>();
 	private Model tdb;
-	private static SemanticInfo semInf;
+	private static SemanticInfo semInf = null;
 	
 	public SemanticInfo()
 	{
