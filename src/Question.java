@@ -21,6 +21,7 @@ public class Question {
 				+ tOQ.getValue().toString() 
 				+ (tOQ.getValue().secondValue() > -1 ? Postposition[tOQ.getValue().secondValue()] : "") 
 				+ tOQ.getTypeString()
+				+ (tOQ.getValue().thirdValue() != null ? tOQ.getValue().thirdValue() : "")
 				+ "?";
 		
 		questionAnswer = tOQ.getValue().answerS();
@@ -58,19 +59,20 @@ public class Question {
 	public enum MovieQuestionType implements lowerTree{
 			directed≈(){
 				@Override
-				public void setFirstSecond(){first = 1; second = -1; ans = con.directorName;}
+				public void setFirstSecond(){first = 1; second = -1; third = null; ans = con.directorName;}
 				}, 
 				genre≈(){
 					@Override
-					public void setFirstSecond(){first = 2; second = 1; ans = "erh... action, I guess..?";}
+					public void setFirstSecond(){first = 2; second = 1; third = null; ans = "erh... action, I guess..?";}
 					}, 
 					date≈(){
 						@Override
-						public void setFirstSecond(){first = 2; second = 0; ans = con.releaseDate;}
+						public void setFirstSecond(){first = 2; second = 0; third = " released"; ans = con.releaseDate;}
 						};
 		
 		private static int first;
 		private static int second;
+		private static String third;
 		private static String ans;
 		MovieQuestionType(){}
 		@Override
@@ -80,6 +82,11 @@ public class Question {
 		@Override
 		public int secondValue(){
 			return second;
+		}
+		@Override
+		public String thirdValue()
+		{
+			return third;
 		}
 		@Override
 		public String answerS(){
@@ -98,11 +105,16 @@ public class Question {
 	{
 		return con;
 	}
+	public TypeOfQuestion tOQ()
+	{
+		return tOQ;
+	}
 }
 //Empty interface to signify that object is lower in enum tree
 interface lowerTree{
 	public int firstValue();
 	public int secondValue();
+	public String thirdValue();
 	public String answerS();
 	public void setFirstSecond();
 }

@@ -35,13 +35,16 @@ public class ActionController implements ActionListener{
 	}
 	private void askAllTheQuestions()
 	{
+		i++;
+		VisualManager.instantiate().setNextQue(i);
+		view.setQuestion(VisualManager.instantiate().getCurrentQue().getQue(), getWrongAnswers());
+	}
+	private ArrayList<String> getWrongAnswers()
+	{
 		ArrayList<String> answers = new ArrayList<String>();
 		answers.add("David");
 		answers.add("Svein");
 		answers.add("Per");
-		
-		i++;
-		VisualManager.instantiate().setNextQue(i);
-		view.setQuestion(VisualManager.instantiate().getCurrentQue().getQue(), answers);
+		return answers;
 	}
 }
