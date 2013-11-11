@@ -1,16 +1,14 @@
 public class Question {
 	
-	public static String questionString;
-	public static String questionAnswer;
-	public boolean answered;
-	public static boolean done;
-	public static TypeOfQuestion tOQ;
-	public static Container con;
+	private static String questionString;
+	private static String questionAnswer;
+	private static Container con;
+	private static TypeOfQuestion tOQ;
+	public boolean done;
 	
 	public Question(Container con)
 	{
 		Question.con = con;
-		answered = false;
 		done = false;
 		tOQ = TypeOfQuestion.values()[((int)(Math.random() * Question.TypeOfQuestion.values().length))];
     	GenerateQuestion();
@@ -87,6 +85,18 @@ public class Question {
 		public String answerS(){
 			return ans;
 		}
+	}
+	public String getQue()
+	{
+		return questionString;
+	}
+	public String getQueAns()
+	{
+		return questionAnswer;
+	}
+	public Container con()
+	{
+		return con;
 	}
 }
 //Empty interface to signify that object is lower in enum tree

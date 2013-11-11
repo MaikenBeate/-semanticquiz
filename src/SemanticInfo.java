@@ -17,9 +17,9 @@ public class SemanticInfo
 	private static List<Question> returnQue = new ArrayList<Question>();
 	private static ArrayList<Container> containers = new ArrayList<Container>();
 	private Model tdb;
-	private static SemanticInfo semInf = null;
+	private static SemanticInfo semInf;
 	
-	private SemanticInfo()
+	public SemanticInfo()
 	{
 		PropertyConfigurator.configure("log4j.properties");
 
@@ -41,7 +41,7 @@ public class SemanticInfo
 		}
 		
 		return semInf;
-	}
+	}	
 	
 	//John sin oppgave
 	private Question makeQuestion(Container container) {
