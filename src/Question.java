@@ -2,7 +2,8 @@ public class Question {
 	
 	public static String questionString;
 	public static String questionAnswer;
-	public static boolean answered, done;
+	public boolean answered;
+	public static boolean done;
 	public static TypeOfQuestion tOQ;
 	public static Container con;
 	
@@ -63,7 +64,7 @@ public class Question {
 				}, 
 				genre≈(){
 					@Override
-					public void setFirstSecond(){first = 2; second = 1;}
+					public void setFirstSecond(){first = 2; second = 1; ans = "erh... action, I guess..?";}
 					}, 
 					date≈(){
 						@Override

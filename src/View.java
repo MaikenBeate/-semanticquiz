@@ -21,6 +21,7 @@ import javax.swing.JLabel;
  * Singleton instantiation
  *
  */
+@SuppressWarnings("serial")
 public class View extends JFrame{
 	
 	private static View view = null;
