@@ -1,14 +1,17 @@
 import java.awt.BorderLayout;
 import java.awt.Container;
 import java.awt.Dimension;
+import java.awt.FlowLayout;
 import java.awt.GridBagLayout;
 
+import javax.swing.BoxLayout;
 import javax.swing.ButtonGroup;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JRadioButton;
+import javax.swing.JTextArea;
 
 import java.awt.Color;
 import java.util.ArrayList;
@@ -49,7 +52,7 @@ public class View extends JFrame{
 	private JPanel wrongRightLabelHolder;
 	private JLabel currentWrongRightLabel;
 	private JPanel movieDescriptionHolder;
-	private JLabel currentMovieDescription;
+	private JTextArea currentMovieDescription;
 	
 	//Finished view
 	private JPanel finishedPanel;
@@ -159,7 +162,7 @@ public class View extends JFrame{
 		
 		updateScore();
 		movieDescriptionHolder.remove(currentMovieDescription);
-		currentMovieDescription = new JLabel(movieDescription);
+		currentMovieDescription = textAreaProperties(new JTextArea(movieDescription));
 		movieDescriptionHolder.add(currentMovieDescription);
 		
 		buttonPanel.remove(currentButton);
@@ -278,7 +281,7 @@ public class View extends JFrame{
 		
 		//QuestionView
 		questionPanel = new JPanel();
-		questionPanel.setLayout(new GridBagLayout()); //shall be vertical
+		questionPanel.setLayout(new BoxLayout(questionPanel, BoxLayout.Y_AXIS)); //shall be vertical
 		questionPanel.setPreferredSize(new Dimension(500, 500));
 		questionPanel.setBackground(Color.WHITE);
 		contentPane.add(questionPanel, BorderLayout.CENTER);
@@ -297,7 +300,7 @@ public class View extends JFrame{
 		
 		//Fasit View
 		fasitPanel = new JPanel();
-		fasitPanel.setLayout(new GridBagLayout()); //shall be vertical
+		fasitPanel.setLayout(new BoxLayout(fasitPanel, BoxLayout.Y_AXIS)); //shall be vertical
 		fasitPanel.setPreferredSize(new Dimension(500, 500));
 		fasitPanel.setBackground(Color.WHITE);
 		
@@ -309,7 +312,7 @@ public class View extends JFrame{
 		wrongRightLabelHolder.add(currentWrongRightLabel);
 		movieDescriptionHolder = new JPanel();
 		movieDescriptionHolder.setBackground(Color.WHITE);
-		currentMovieDescription = new JLabel("");
+		currentMovieDescription = textAreaProperties(new JTextArea());
 		movieDescriptionHolder.add(currentMovieDescription);
 		
 		fasitPanel.add(wrongRightImagePanel);
@@ -318,7 +321,7 @@ public class View extends JFrame{
 		
 		//Finished view
 		finishedPanel = new JPanel();
-		finishedPanel.setLayout(new GridBagLayout()); //shall be vertical
+		finishedPanel.setLayout(new BoxLayout(finishedPanel, BoxLayout.Y_AXIS)); //shall be vertical
 		finishedPanel.setPreferredSize(new Dimension(500, 500));
 		finishedPanel.setBackground(Color.WHITE);
 		
@@ -329,7 +332,13 @@ public class View extends JFrame{
 		
 		finishedPanel.add(scoreLabelHolder);
 	}
-
+	
+	private JTextArea textAreaProperties(JTextArea textArea) {
+	    textArea.setEditable(false);  
+	    textArea.setLineWrap(true);
+	    textArea.setWrapStyleWord(true);
+	    return textArea;
+	}
 
 //	/**
 //	 * @param args 

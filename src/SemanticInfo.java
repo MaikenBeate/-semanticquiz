@@ -182,6 +182,7 @@ public class SemanticInfo
 					+ 		"?directoruri movie:director_name ?directorName ."
 					+ 		"?movieuri dc:date ?date ." 
 					+ "} LIMIT 1";
+
 			
 	        Query query = QueryFactory.create(queryString);
 	        //QueryExecution qExe = QueryExecutionFactory.sparqlService( "http://data.linkedmdb.org/sparql", query );
