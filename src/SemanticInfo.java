@@ -19,15 +19,16 @@ public class SemanticInfo
 	
 	public SemanticInfo()
 	{
-		fetchMoviesWithHighGross();
-		fetchMoviesWithMediumGross();
-		fetchMoviesWithLowGross();
 		
 		PropertyConfigurator.configure("log4j.properties");
 
 		String directory = "./tdb";
 		Dataset dataset = TDBFactory.createDataset(directory);
 		tdb = dataset.getDefaultModel();
+		
+		fetchMoviesWithHighGross();
+		fetchMoviesWithMediumGross();
+		fetchMoviesWithLowGross();
 		
 		//String source = "linkedmdb\\linkedmdb-latest-dump.nt";
 		//FileManager.get().readModel(tdb, source, "N-TRIPLES");
