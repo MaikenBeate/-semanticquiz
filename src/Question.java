@@ -1,19 +1,20 @@
 public class Question {
 	
-	private static String questionString;
-	private static String questionAnswer;
-	private static Container con;
-	private static TypeOfQuestion tOQ;
+	private String questionString;
+	private String questionAnswer;
+	private Container con;
+	private TypeOfQuestion tOQ;
 	public boolean done;
 	
 	public Question(Container con)
 	{
-		Question.con = con;
+		this.con = con;
 		done = false;
 		tOQ = TypeOfQuestion.values()[((int)(Math.random() * Question.TypeOfQuestion.values().length))];
+		tOQ.setCon(con);
     	GenerateQuestion();
 	}
-	public static void GenerateQuestion()
+	public void GenerateQuestion()
 	{		
 		String[] Preposition = new String[]{"which ", "who ", "what "};
 		String[] Postposition = new String[]{"was ", "is "};
@@ -40,13 +41,15 @@ public class Question {
 			}
 			@Override
 			public String getTypeString(){
-				return "the movie " + con.movieName;
+				return "the movie " + cont.movieName;
 			}
 		};
 		protected lowerTree value;
+		protected Container cont;
 		private TypeOfQuestion(){
 			this.value = MovieQuestionType.values()[((int)(Math.random() * MovieQuestionType.values().length))];
-			this.value.setFirstSecond();
+			this.value.setFirstSecond(cont);
+			
 		}
 	    public lowerTree getValue(){
 	    	return null;
@@ -54,26 +57,30 @@ public class Question {
 	    public String getTypeString(){
 	    	return null;
 	    }
+	    public void setCon(Container con)
+	    {
+	    	this.cont = con;
+	    }
 	}
 	
 	public enum MovieQuestionType implements lowerTree{
 			directed≈(){
 				@Override
-				public void setFirstSecond(){first = 1; second = -1; third = null; ans = con.directorName;}
+				public void setFirstSecond(Container con){first = 1; second = -1; third = null; ans = con.directorName;}
 				}, 
 				genre≈(){
 					@Override
-					public void setFirstSecond(){first = 2; second = 1; third = null; ans = "erh... action, I guess..?";}
+					public void setFirstSecond(Container con){first = 2; second = 1; third = null; ans = "erh... action, I guess..?";}
 					}, 
 					date≈(){
 						@Override
-						public void setFirstSecond(){first = 2; second = 0; third = " released"; ans = con.releaseDate;}
+						public void setFirstSecond(Container con){first = 2; second = 0; third = " released"; ans = con.releaseDate;}
 						};
 		
-		private static int first;
-		private static int second;
-		private static String third;
-		private static String ans;
+		protected int first;
+		protected int second;
+		protected String third;
+		protected String ans;
 		MovieQuestionType(){}
 		@Override
 		public int firstValue(){
@@ -116,5 +123,5 @@ interface lowerTree{
 	public int secondValue();
 	public String thirdValue();
 	public String answerS();
-	public void setFirstSecond();
+	public void setFirstSecond(Container con);
 }

@@ -1,5 +1,6 @@
 import java.util.ArrayList;
 import java.util.HashMap;
+
 import org.apache.log4j.PropertyConfigurator;
 
 import com.hp.hpl.jena.query.Dataset;
@@ -10,6 +11,7 @@ import com.hp.hpl.jena.query.QueryFactory;
 import com.hp.hpl.jena.query.ResultSet;
 import com.hp.hpl.jena.rdf.model.Model;
 import com.hp.hpl.jena.tdb.TDBFactory;
+import com.hp.hpl.jena.util.FileManager;
 
 public class SemanticInfo 
 {
@@ -32,7 +34,6 @@ public class SemanticInfo
 		
 		//String source = "linkedmdb\\linkedmdb-latest-dump.nt";
 		//FileManager.get().readModel(tdb, source, "N-TRIPLES");
-		
 		
 		tdb.close() ;
 	}
@@ -253,7 +254,8 @@ public class SemanticInfo
 		
 		Container container = new Container();
 		String[] splitArray = queryAnswer.split("\"");
-
+		
+		System.out.println(title);
 		container.movieName = title;
 		container.description = description;
 		container.difficultyLevel = difficultyLevel;
