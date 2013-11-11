@@ -1,32 +1,37 @@
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-
 //Singleton instantiation.
-public class VisualManager implements ActionListener{
+public class VisualManager{
 
 	private static VisualManager visualManager = null;
 	private static Question[] questionArray;
-
-	/**
-	 * @param args
-	 */
+	private Question currentQue;
+	
+	private VisualManager(){}
 	private VisualManager(Question[] questionArray){
 		VisualManager.questionArray = questionArray;
 	}
-	
-	public static VisualManager instantiate(Question[] questionArray){
-		
+	public static VisualManager instantiate()
+	{	
+		if(visualManager == null)
+		{
+			return null;
+		}
+		return visualManager;
+	}
+
+	public static VisualManager instantiate(Question[] questionArray)
+	{	
 		if(visualManager == null)
 		{
 			visualManager = new VisualManager(questionArray);
 		}
 		return visualManager;
 	}
-
-	@Override
-	public void actionPerformed(ActionEvent e) {
-		// TODO Auto-generated method stub
-		
+	public void setNextQue(int i)
+	{
+		currentQue = VisualManager.questionArray[i];
 	}
-	
+	public Question getCurrentQue()
+	{
+		return currentQue;
+	}
 }

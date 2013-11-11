@@ -1,6 +1,5 @@
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import org.apache.log4j.PropertyConfigurator;
 
 import com.hp.hpl.jena.query.Dataset;
@@ -9,18 +8,21 @@ import com.hp.hpl.jena.query.QueryExecution;
 import com.hp.hpl.jena.query.QueryExecutionFactory;
 import com.hp.hpl.jena.query.QueryFactory;
 import com.hp.hpl.jena.query.ResultSet;
-import com.hp.hpl.jena.query.ResultSetFormatter;
 import com.hp.hpl.jena.rdf.model.Model;
 import com.hp.hpl.jena.tdb.TDBFactory;
 
 public class SemanticInfo 
 {
-	private static List<Question> returnQue = new ArrayList<Question>();
-	private static ArrayList<Container> containers = new ArrayList<Container>();
+	private static ArrayList<Question> returnQue = new ArrayList<Question>();
 	private Model tdb;
+	private static SemanticInfo semInf = null;
 	
 	public SemanticInfo()
 	{
+		fetchMoviesWithHighGross();
+		fetchMoviesWithMediumGross();
+		fetchMoviesWithLowGross();
+		
 		PropertyConfigurator.configure("log4j.properties");
 
 		String directory = "./tdb";
@@ -34,40 +36,21 @@ public class SemanticInfo
 		tdb.close() ;
 	}
 	
-	
-	/*Prefixes - temporary
-	 * 
-	 * "PREFIX movie: <http://data.linkedmdb.org/resource/movie/>"
-    		+"PREFIX owl: <http://www.w3.org/2002/07/owl#>"
-    			+"PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>"
-    				+"PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>"
-    					+"PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>"
-    						+"PREFIX foaf: <http://xmlns.com/foaf/0.1/>"
-    							+"PREFIX oddlinker: <http://data.linkedmdb.org/resource/oddlinker/>"
-    								+"PREFIX map: <file:/C:/d2r-server-0.4/mapping.n3#>"
-    									+"PREFIX db: <http://data.linkedmdb.org/resource/>"
-    										+"PREFIX dbpedia: <http://dbpedia.org/property/>"
-    											+"PREFIX skos: <http://www.w3.org/2004/02/skos/core#>"
-    												+"PREFIX dc: <http://purl.org/dc/terms/>"*/
-
-	
+	public static SemanticInfo instantiate()
+	{
+		if(semInf == null){
+			semInf = new SemanticInfo();
+		}
+		
+		return semInf;
+	}	
 	
 	//John sin oppgave
-	private void makeQuestion(Container container) {
+	private Question makeQuestion(Container container) {
 		
-		Question question = new Question();
-		question.tOQ = Question.TypeOfQuestion.values()[((int)(Math.random() * Question.TypeOfQuestion.values().length))];
-		//sQuesType = Question.StringQuestionType.Director.toString();
-		//System.out.println(sQuesType);//Question.TypeOfQuestion.values()[((int)(Math.random() * Question.TypeOfQuestion.values().length))];
+		Question question = new Question(container);
 		
-		//container.questionType = sQuesType;
-		//container.answers = new String[]{"Correct answer here","Wrong answer one string here", "Wrong answer two string here", "Wrong answer three string here"};
-		//containerMoviePosterImage;
-		
-		//add container to the return containers:
-		//tempQ.setContainer(container);
-		//returnQue.add(tempQ);
-
+		return question;
 	}
 	
 	
@@ -211,10 +194,8 @@ public class SemanticInfo
 	        while(resultset.hasNext())
 		    {
 	        	//System.out.println(resultset.next().toString());
-	        	Container container = saveInformationInContainer(resultset.next().toString(), title, description, difficultyLevel);
-	        	containers.add(container);
 	        	
-	        	makeQuestion(container);
+	        	returnQue.add(makeQuestion(saveInformationInContainer(resultset.next().toString(), title, description, difficultyLevel)));
 		    }
 	              
 		}
@@ -298,7 +279,7 @@ public class SemanticInfo
 	
 	
 	//temporary
-	public static void main(String[] args) {
+	/*public static void main(String[] args) {
 		
 		SemanticInfo sem = new SemanticInfo();
 	    sem.fetchMoviesWithHighGross();
@@ -308,5 +289,5 @@ public class SemanticInfo
         for(Container container : containers){
         	System.out.println("Movie title: " + container.movieName + ", Director: " + container.directorName + ", Date: " + container.releaseDate + " Desc: " + container.description + ", Difficulty Level: " + container.difficultyLevel);
         }
-	}
+	}*/
 }
