@@ -275,7 +275,8 @@ public class SemanticInfo
 	
 	public Question[] getQuestion()
 	{
-		return (Question[])returnQue.toArray();
+		Question[] e = null;
+		return returnQue.toArray(e);
 	}
 	
 	
