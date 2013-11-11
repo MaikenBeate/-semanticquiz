@@ -1,6 +1,5 @@
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import org.apache.log4j.PropertyConfigurator;
 
 import com.hp.hpl.jena.query.Dataset;
@@ -14,13 +13,16 @@ import com.hp.hpl.jena.tdb.TDBFactory;
 
 public class SemanticInfo 
 {
-	private static List<Question> returnQue = new ArrayList<Question>();
-	private static ArrayList<Container> containers = new ArrayList<Container>();
+	private static ArrayList<Question> returnQue = new ArrayList<Question>();
 	private Model tdb;
 	private static SemanticInfo semInf = null;
 	
 	public SemanticInfo()
 	{
+		fetchMoviesWithHighGross();
+		fetchMoviesWithMediumGross();
+		fetchMoviesWithLowGross();
+		
 		PropertyConfigurator.configure("log4j.properties");
 
 		String directory = "./tdb";
@@ -192,10 +194,8 @@ public class SemanticInfo
 	        while(resultset.hasNext())
 		    {
 	        	//System.out.println(resultset.next().toString());
-	        	Container container = saveInformationInContainer(resultset.next().toString(), title, description, difficultyLevel);
-	        	containers.add(container);
 	        	
-	        	returnQue.add(makeQuestion(container));
+	        	returnQue.add(makeQuestion(saveInformationInContainer(resultset.next().toString(), title, description, difficultyLevel)));
 		    }
 	              
 		}
@@ -279,7 +279,7 @@ public class SemanticInfo
 	
 	
 	//temporary
-	public static void main(String[] args) {
+	/*public static void main(String[] args) {
 		
 		SemanticInfo sem = new SemanticInfo();
 	    sem.fetchMoviesWithHighGross();
@@ -289,5 +289,5 @@ public class SemanticInfo
         for(Container container : containers){
         	System.out.println("Movie title: " + container.movieName + ", Director: " + container.directorName + ", Date: " + container.releaseDate + " Desc: " + container.description + ", Difficulty Level: " + container.difficultyLevel);
         }
-	}
+	}*/
 }
