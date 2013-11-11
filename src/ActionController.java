@@ -30,8 +30,7 @@ public class ActionController implements ActionListener{
 		}
 		else if(event.getActionCommand().equals("Ferdig")){
 			view.finish();
-		}
-		
+		}	
 	}
 	private void askAllTheQuestions()
 	{
@@ -42,6 +41,21 @@ public class ActionController implements ActionListener{
 	private ArrayList<String> getWrongAnswers()
 	{
 		ArrayList<String> answers = new ArrayList<String>();
+		switch(VisualManager.instantiate().getCurrentQue().tOQ())
+		{
+		case MovieQuestion:
+			
+			switch((Question.MovieQuestionType)VisualManager.instantiate().getCurrentQue().tOQ().getValue())
+			{
+			case directed≈:
+				break;
+			case genre≈:
+				break;
+			case date≈: 
+				break;
+			}
+			break;
+		}
 		answers.add("David");
 		answers.add("Svein");
 		answers.add("Per");
