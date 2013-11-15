@@ -81,6 +81,10 @@ enum TypeOfQuestion{
 		public String getTypeString(){
 			return "the movie " + cont.movieName;
 		}
+		@Override
+		protected lowerTree getCorrectEnum(){
+	    	return MovieQuestionType.values()[((int)(Math.random() * MovieQuestionType.values().length))];
+	    }
 	};
 	private static int lowKey = -1;
 	protected Container cont;
@@ -89,11 +93,14 @@ enum TypeOfQuestion{
 	private TypeOfQuestion(){
 		setLowerTree();
 	}
+	protected lowerTree getCorrectEnum(){
+    	return null;
+    }
 	private void setLowerTree()
 	{
 		TypeOfQuestion.lowKey++;
 		thisLowKey = TypeOfQuestion.lowKey;
-		lowMap.put(thisLowKey, MovieQuestionType.values()[((int)(Math.random() * MovieQuestionType.values().length))]);
+		lowMap.put(thisLowKey, getCorrectEnum());
 		lowMap.get(thisLowKey).setFirstSecond(cont);
 	}
     public lowerTree getValue(){
