@@ -75,19 +75,26 @@ enum TypeOfQuestion{
 		//Overrides return with relevant type and return cast
 		@Override 
 		public MovieQuestionType getValue(){
-			return (MovieQuestionType)this.value;
+			return (MovieQuestionType)lowMap.get(thisLowKey);
 		}
 		@Override
 		public String getTypeString(){
 			return "the movie " + cont.movieName;
 		}
 	};
-	protected lowerTree value;
+	private static int lowKey = -1;
 	protected Container cont;
+	protected int thisLowKey;
+	protected static HashMap<Integer, lowerTree> lowMap = new HashMap<Integer, lowerTree>();
 	private TypeOfQuestion(){
-		this.value = MovieQuestionType.values()[((int)(Math.random() * MovieQuestionType.values().length))];
-		this.value.setFirstSecond(cont);
-		
+		setLowerTree();
+	}
+	private void setLowerTree()
+	{
+		TypeOfQuestion.lowKey++;
+		thisLowKey = TypeOfQuestion.lowKey;
+		lowMap.put(thisLowKey, MovieQuestionType.values()[((int)(Math.random() * MovieQuestionType.values().length))]);
+		lowMap.get(thisLowKey).setFirstSecond(cont);
 	}
     public lowerTree getValue(){
     	return null;
