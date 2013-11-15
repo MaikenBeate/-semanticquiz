@@ -278,7 +278,6 @@ public class SemanticInfo
 	
 	public Question[] getQuestion()
 	{
-		
 		return returnQue.toArray(new Question[returnQue.size()]);
 	}
 	

@@ -45,12 +45,12 @@ public class ActionController implements ActionListener{
 		{
 		case MovieQuestion:
 			
-			switch((Question.MovieQuestionType)VisualManager.instantiate().getCurrentQue().tOQ().getValue())
+			switch((MovieQuestionType)VisualManager.instantiate().getCurrentQue().tOQ().getValue())
 			{
 			case directed≈:
 				break;
-			case genre≈:
-				break;
+			/*case genre≈:
+				break;*/
 			case date≈: 
 				break;
 			}
