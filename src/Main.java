@@ -5,7 +5,8 @@ public class Main {
     public static void main (String args[]) 
     {
     	semInfo = SemanticInfo.instantiate();
-    	VisualManager.instantiate(semInfo.getQuestion());
-    	View.instantiate();
+    	semInfo.getQuestion();
+    	/*VisualManager.instantiate(semInfo.getQuestion());
+    	View.instantiate();*/
     }
 }

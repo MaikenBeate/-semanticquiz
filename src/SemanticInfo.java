@@ -278,7 +278,16 @@ public class SemanticInfo
 	
 	public Question[] getQuestion()
 	{
-		return returnQue.toArray(new Question[returnQue.size()]);
+		ArrayList<Question> testset = new ArrayList<Question>();
+		Container contest = new Container();
+		contest.movieName = "testerson pie";
+		testset.add(new Question(contest));
+		testset.add(new Question(contest));
+		testset.add(new Question(contest));
+		testset.add(new Question(contest));
+		testset.add(new Question(contest));
+		//returnQue
+		return testset.toArray(new Question[testset.size()]);
 	}
 	
 	

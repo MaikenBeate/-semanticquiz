@@ -7,31 +7,28 @@ public class Question {
 	private Container con;
 	private int thisKey;
 	private boolean done;
-	private static int tOQKey = -1;
-	private static HashMap<Integer, TypeOfQuestion> tOQMap = new HashMap<Integer, TypeOfQuestion>();
+	private TypeOfQuestion tOQ;
 	
 	public Question(Container con)
 	{
-		tOQKey++;
-		thisKey = tOQKey;
 		this.con = con;
 		done = false;
-		tOQMap.put(thisKey, TypeOfQuestion.values()[((int)(Math.random() * TypeOfQuestion.values().length))]);
-		tOQMap.get(thisKey).setCon(con);
-    	GenerateQuestion();
+		/*tOQ =*/ System.out.println(TypeOfQuestion.values()[0].toString());
+		//tOQ.setCon(con);
+    	//GenerateQuestion();
 	}
 	public void GenerateQuestion()
 	{		
 		String[] Preposition = new String[]{"which ", "who ", "what "};
 		String[] Postposition = new String[]{"was ", "is "};
-		String tempString = (tOQMap.get(thisKey).getValue().firstValue() > -1 ? Preposition[tOQMap.get(thisKey).getValue().firstValue()] : "")
-				+ tOQMap.get(thisKey).getValue().toString() 
-				+ (tOQMap.get(thisKey).getValue().secondValue() > -1 ? Postposition[tOQMap.get(thisKey).getValue().secondValue()] : "") 
-				+ tOQMap.get(thisKey).getTypeString()
-				+ (tOQMap.get(thisKey).getValue().thirdValue() != null ? tOQMap.get(thisKey).getValue().thirdValue() : "")
+		String tempString = (tOQ.getValue().firstValue() > -1 ? Preposition[tOQ.getValue().firstValue()] : "")
+				+ tOQ.getValue().toString() 
+				+ (tOQ.getValue().secondValue() > -1 ? Postposition[tOQ.getValue().secondValue()] : "") 
+				+ tOQ.getTypeString()
+				+ (tOQ.getValue().thirdValue() != null ? tOQ.getValue().thirdValue() : "")
 				+ "?";
 		
-		questionAnswer = tOQMap.get(thisKey).getValue().answerS();
+		questionAnswer = tOQ.getValue().answerS();
 		
 		tempString = StringManipulation.AddSpacesToReplaceZero(StringManipulation.FirstToUpperCase(tempString, false));
 		questionString = tempString;
@@ -51,7 +48,7 @@ public class Question {
 	}
 	public TypeOfQuestion tOQ()
 	{
-		return tOQMap.get(thisKey);
+		return tOQ;
 	}
 	public boolean getDone()
 	{
@@ -75,7 +72,7 @@ enum TypeOfQuestion{
 		//Overrides return with relevant type and return cast
 		@Override 
 		public MovieQuestionType getValue(){
-			return (MovieQuestionType)lowMap.get(thisLowKey);
+			return (MovieQuestionType)tree;
 		}
 		@Override
 		public String getTypeString(){
@@ -86,10 +83,8 @@ enum TypeOfQuestion{
 	    	return MovieQuestionType.values()[((int)(Math.random() * MovieQuestionType.values().length))];
 	    }
 	};
-	private static int lowKey = -1;
 	protected Container cont;
-	protected int thisLowKey;
-	protected static HashMap<Integer, lowerTree> lowMap = new HashMap<Integer, lowerTree>();
+	protected lowerTree tree;
 	private TypeOfQuestion(){
 		setLowerTree();
 	}
@@ -98,10 +93,8 @@ enum TypeOfQuestion{
     }
 	private void setLowerTree()
 	{
-		TypeOfQuestion.lowKey++;
-		thisLowKey = TypeOfQuestion.lowKey;
-		lowMap.put(thisLowKey, getCorrectEnum());
-		lowMap.get(thisLowKey).setFirstSecond(cont);
+		tree = getCorrectEnum();
+		tree.setFirstSecond(cont);
 	}
     public lowerTree getValue(){
     	return null;
