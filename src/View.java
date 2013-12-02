@@ -20,7 +20,6 @@ import javax.swing.JLabel;
 
 
 /**
- * @author Maiken Beate Fjellanger
  * Singleton instantiation
  *
  */

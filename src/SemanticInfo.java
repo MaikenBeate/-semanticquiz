@@ -58,7 +58,6 @@ public class SemanticInfo
 	
 	/**
 	 * Gets movies with low gross - difficult movies
-	 * @author Maiken Beate
 	 */
 	private void fetchMoviesWithLowGross(){
 		
@@ -90,7 +89,6 @@ public class SemanticInfo
 	
 	/**
 	 * Gets movies with medium gross - medium difficult movies
-	 * @author Maiken Beate
 	 */
 	private void fetchMoviesWithMediumGross(){
 			
@@ -124,7 +122,6 @@ public class SemanticInfo
 	
 	/**
 	 * Gets movies with high gross - easy movies
-	 * @author Maiken Beate
 	 */
 	private void fetchMoviesWithHighGross(){
 			
@@ -165,7 +162,6 @@ public class SemanticInfo
 	 * saves the information and formulates a questions based on the movie information
 	 * @param String movieTitle - a movie title
 	 * @param String difficultyLevel - relative to gross
-	 * @author Maiken Beate
 	 */
 	private void fetchMovieInformationFromLinkedMDB(String title, String description, String difficultyLevel){
 			
@@ -208,7 +204,6 @@ public class SemanticInfo
 	 * Extracts movietitles from a resultset of movies, and returns them in an arraylist
 	 * @param Resultset - resultset
 	 * @return ArrayList<String> movietitles
-	 * @author Maiken Beate
 	 */
 	private HashMap<String, String> filterOutMovieTitles(ResultSet resultset) {
 		
@@ -249,7 +244,6 @@ public class SemanticInfo
 	 * @param String queryAnswer
 	 * @param String difficultyLevel - relative to gross
 	 * @return Container container - the container with the information filled in
-	 * @author Maiken Beate
 	 */
 	private Container saveInformationInContainer(String queryAnswer, String title, String description, String difficultyLevel) {
 		
