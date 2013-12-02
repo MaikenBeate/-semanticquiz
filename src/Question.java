@@ -91,8 +91,9 @@ enum TypeOfQuestion{
     }
 	public void setLowerTree(Container con)
 	{
+		cont = con;
 		tree = getCorrectEnum();
-		tree.setFirstSecond(cont);
+		tree.setFirstSecond(con);
 	}
     public lowerTree getValue(){
     	return null;

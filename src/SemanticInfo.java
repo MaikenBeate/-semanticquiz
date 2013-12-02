@@ -9,6 +9,7 @@ import com.hp.hpl.jena.query.QueryExecution;
 import com.hp.hpl.jena.query.QueryExecutionFactory;
 import com.hp.hpl.jena.query.QueryFactory;
 import com.hp.hpl.jena.query.ResultSet;
+import com.hp.hpl.jena.query.ResultSetFormatter;
 import com.hp.hpl.jena.rdf.model.Model;
 import com.hp.hpl.jena.tdb.TDBFactory;
 import com.hp.hpl.jena.util.FileManager;
@@ -272,16 +273,8 @@ public class SemanticInfo
 	
 	public Question[] getQuestion()
 	{
-		ArrayList<Question> testset = new ArrayList<Question>();
-		Container contest = new Container();
-		contest.movieName = "testerson pie";
-		testset.add(new Question(contest));
-		testset.add(new Question(contest));
-		testset.add(new Question(contest));
-		testset.add(new Question(contest));
-		testset.add(new Question(contest));
 		//returnQue
-		return testset.toArray(new Question[testset.size()]);
+		return returnQue.toArray(new Question[returnQue.size()]);
 	}
 	
 	
