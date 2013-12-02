@@ -5,7 +5,6 @@ public class Question {
 	private String questionString;
 	private String questionAnswer;
 	private Container con;
-	private int thisKey;
 	private boolean done;
 	private TypeOfQuestion tOQ;
 	
@@ -13,9 +12,9 @@ public class Question {
 	{
 		this.con = con;
 		done = false;
-		/*tOQ =*/ System.out.println(TypeOfQuestion.values()[0].toString());
-		//tOQ.setCon(con);
-    	//GenerateQuestion();
+		tOQ = TypeOfQuestion.values()[0];
+		tOQ.setCon(con);
+    	GenerateQuestion();
 	}
 	public void GenerateQuestion()
 	{		
