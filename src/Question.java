@@ -1,4 +1,3 @@
-import java.util.HashMap;
 
 public class Question {
 	
@@ -13,7 +12,7 @@ public class Question {
 		this.con = con;
 		done = false;
 		tOQ = TypeOfQuestion.values()[0];
-		tOQ.setCon(con);
+		tOQ.setLowerTree(con);
     	GenerateQuestion();
 	}
 	public void GenerateQuestion()
@@ -85,12 +84,12 @@ enum TypeOfQuestion{
 	protected Container cont;
 	protected lowerTree tree;
 	private TypeOfQuestion(){
-		setLowerTree();
+		//etLowerTree();
 	}
 	protected lowerTree getCorrectEnum(){
     	return null;
     }
-	private void setLowerTree()
+	public void setLowerTree(Container con)
 	{
 		tree = getCorrectEnum();
 		tree.setFirstSecond(cont);
@@ -101,10 +100,10 @@ enum TypeOfQuestion{
     public String getTypeString(){
     	return null;
     }
-    public void setCon(Container con)
+    /*public void setCon(Container con)
     {
     	this.cont = con;
-    }
+    }*/
 }
 
 enum MovieQuestionType implements lowerTree{

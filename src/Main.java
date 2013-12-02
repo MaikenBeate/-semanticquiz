@@ -6,7 +6,7 @@ public class Main {
     {
     	semInfo = SemanticInfo.instantiate();
     	semInfo.getQuestion();
-    	/*VisualManager.instantiate(semInfo.getQuestion());
-    	View.instantiate();*/
+    	VisualManager.instantiate(semInfo.getQuestion());
+    	View.instantiate();
     }
 }
