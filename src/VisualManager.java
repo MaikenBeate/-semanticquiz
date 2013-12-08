@@ -45,9 +45,7 @@ public class VisualManager{
 		answers.add(currentQue.getQueAns());
 		while(answers.size() < 3)
 		{
-			int tempInt = (int)(Math.random() * questionArray.length);
-			
-			Question tempQue = questionArray[tempInt];
+			Question tempQue = questionArray[(int)(Math.random() * questionArray.length)];
 			String tempString = new String();
 			switch(tempQue.tOQ())
 			{
