@@ -47,11 +47,11 @@ public class VisualManager{
 		{
 			Question tempQue = questionArray[(int)(Math.random() * questionArray.length)];
 			String tempString = new String();
-			switch(tempQue.tOQ())
+			switch(currentQue.tOQ())
 			{
 			case MovieQuestion:
 				
-				switch((MovieQuestionType)tempQue.tOQ().getValue())
+				switch((MovieQuestionType)currentQue.tOQ().getValue())
 				{
 				case directed≈:
 					tempString = tempQue.con().directorName;
