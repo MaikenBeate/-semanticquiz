@@ -7,7 +7,6 @@ public class VisualManager{
 	private static VisualManager visualManager = null;
 	private static Question[] questionArray;
 	private Question currentQue;
-	private int curQuesI;
 	private VisualManager(){}
 	
 	private VisualManager(Question[] questionArray){
@@ -32,7 +31,6 @@ public class VisualManager{
 	}
 	public void setNextQue(int i)
 	{
-		this.curQuesI = i;
 		currentQue = VisualManager.questionArray[i];
 		System.out.println(currentQue.getQue());
 	}
@@ -49,31 +47,28 @@ public class VisualManager{
 		{
 			int tempInt = (int)(Math.random() * questionArray.length);
 			
-			if(tempInt != curQuesI)
+			Question tempQue = questionArray[tempInt];
+			String tempString = new String();
+			switch(tempQue.tOQ())
 			{
-				Question tempQue = questionArray[tempInt];
-				String tempString = new String();
-				switch(tempQue.tOQ())
+			case MovieQuestion:
+				
+				switch((MovieQuestionType)tempQue.tOQ().getValue())
 				{
-				case MovieQuestion:
+				case directed≈:
+					tempString = tempQue.con().directorName;
+					break;
 					
-					switch((MovieQuestionType)tempQue.tOQ().getValue())
-					{
-					case directed≈:
-						tempString = tempQue.con().directorName;
-						break;
-						
-					case date≈:
-						tempString = tempQue.con().releaseDate;
-						break;
-					}
-					
+				case date≈:
+					tempString = tempQue.con().releaseDate;
 					break;
 				}
-				if(!answers.contains(tempString))
-				{
-					answers.add(tempString);
-				}
+				
+				break;
+			}
+			if(!answers.contains(tempString))
+			{
+				answers.add(tempString);
 			}
 		}
 		
