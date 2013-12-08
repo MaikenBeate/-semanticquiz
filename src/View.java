@@ -33,6 +33,7 @@ public class View extends JFrame{
 	private JPanel scorePanel;
 	private int questionsAnswerd;
 	private int correctAnswers;
+	private int score;
 
 
 	private JPanel currentView; // question, fasit or finished
@@ -165,7 +166,10 @@ public class View extends JFrame{
 		movieDescriptionHolder.add(currentMovieDescription);
 		
 		buttonPanel.remove(currentButton);
-		if(questionsAnswerd == 4){
+		if(questionsAnswerd == 10){
+			score = correctAnswers;
+			questionsAnswerd = 0;
+			correctAnswers = 0;
 			currentButton = finishButton;
 		}
 		else{
@@ -187,7 +191,7 @@ public class View extends JFrame{
 			contentPane.add(finishedPanel, BorderLayout.CENTER);
 		}
 		scoreLabelHolder.remove(currentScoreLabel);
-		currentScoreLabel = new JLabel("Gratulerer din score ble " + correctAnswers);
+		currentScoreLabel = new JLabel("Gratulerer din score ble " + score);
 		scoreLabelHolder.add(currentScoreLabel);
 		
 		buttonPanel.remove(currentButton);
