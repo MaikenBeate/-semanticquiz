@@ -11,7 +11,7 @@ public class Question {
 	{
 		this.con = con;
 		done = false;
-		tOQ = TypeOfQuestion.values()[0];
+		tOQ = TypeOfQuestion.values()[((int)(Math.random() * TypeOfQuestion.values().length))];
 		tOQ.setLowerTree(con);
     	GenerateQuestion();
 	}

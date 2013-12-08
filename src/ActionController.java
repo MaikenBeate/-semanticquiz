@@ -1,7 +1,5 @@
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.ArrayList;
-
 
 public class ActionController implements ActionListener{
 	
@@ -22,7 +20,7 @@ public class ActionController implements ActionListener{
 			String answer = view.getAnswer();
 			
 			view.fasit((answer == VisualManager.instantiate().getCurrentQue().getQueAns() ? true : false),
-					VisualManager.instantiate().getCurrentQue().con().description,
+				VisualManager.instantiate().getCurrentQue().con().description,
 					VisualManager.instantiate().getCurrentQue().getQueAns());
 		}
 		else if(event.getActionCommand().equals("Neste")){
@@ -36,30 +34,6 @@ public class ActionController implements ActionListener{
 	{
 		i++;
 		VisualManager.instantiate().setNextQue(i);
-		view.setQuestion(VisualManager.instantiate().getCurrentQue().getQue(), getWrongAnswers());
-	}
-	private ArrayList<String> getWrongAnswers()
-	{
-		ArrayList<String> answers = new ArrayList<String>();
-		switch(VisualManager.instantiate().getCurrentQue().tOQ())
-		{
-		case MovieQuestion:
-			
-			switch((MovieQuestionType)VisualManager.instantiate().getCurrentQue().tOQ().getValue())
-			{
-			case directed≈:
-				break;
-			/*case genre≈:
-				break;*/
-			case date≈: 
-				break;
-			}
-			
-			break;
-		}
-		answers.add("David");
-		answers.add("Svein");
-		answers.add("Per");
-		return answers;
+		view.setQuestion(VisualManager.instantiate().getCurrentQue().getQue(), VisualManager.instantiate().getAnswers());
 	}
 }

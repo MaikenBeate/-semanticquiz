@@ -1,11 +1,15 @@
+import java.util.ArrayList;
+import java.util.Collections;
+
 //Singleton instantiation.
 public class VisualManager{
 
 	private static VisualManager visualManager = null;
 	private static Question[] questionArray;
 	private Question currentQue;
-	
+	private int curQuesI;
 	private VisualManager(){}
+	
 	private VisualManager(Question[] questionArray){
 		VisualManager.questionArray = questionArray;
 	}
@@ -28,6 +32,7 @@ public class VisualManager{
 	}
 	public void setNextQue(int i)
 	{
+		this.curQuesI = i;
 		currentQue = VisualManager.questionArray[i];
 		System.out.println(currentQue.getQue());
 	}
@@ -35,5 +40,44 @@ public class VisualManager{
 	{
 		System.out.println(currentQue.con().movieName);
 		return currentQue;
+	}
+	public ArrayList<String> getAnswers()
+	{		
+		ArrayList<String> answers = new ArrayList<String>();
+		answers.add(currentQue.getQueAns());
+		while(answers.size() < 3)
+		{
+			int tempInt = (int)(Math.random() * questionArray.length);
+			
+			if(tempInt != curQuesI)
+			{
+				Question tempQue = questionArray[tempInt];
+				String tempString = new String();
+				switch(tempQue.tOQ())
+				{
+				case MovieQuestion:
+					
+					switch((MovieQuestionType)tempQue.tOQ().getValue())
+					{
+					case directedÅ:
+						tempString = tempQue.con().directorName;
+						break;
+						
+					case dateÅ:
+						tempString = tempQue.con().releaseDate;
+						break;
+					}
+					
+					break;
+				}
+				if(!answers.contains(tempString))
+				{
+					answers.add(tempString);
+				}
+			}
+		}
+		
+		Collections.shuffle(answers);
+		return answers;
 	}
 }
