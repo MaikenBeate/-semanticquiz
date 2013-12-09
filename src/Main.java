@@ -1,6 +1,3 @@
-import java.util.ArrayList;
-import java.util.Iterator;
-
 public class Main {
 
 	private static SemanticInfo semInfo;

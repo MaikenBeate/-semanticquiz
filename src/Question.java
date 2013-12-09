@@ -15,14 +15,6 @@ public class Question {
 		tOQ.setLowerTree(con);
     	GenerateQuestion();
 	}
-	public Question()
-	{
-		this.con = new Container();
-		done = false;
-		tOQ = TypeOfQuestion.values()[((int)(Math.random() * TypeOfQuestion.values().length))];
-		tOQ.setLowerTree(con);
-    	GenerateQuestion();
-	}
 	public void GenerateQuestion()
 	{		
 		String[] Preposition = new String[]{"which ", "who ", "what "};
@@ -86,11 +78,15 @@ enum TypeOfQuestion{
 		}
 		@Override
 		protected lowerTree getCorrectEnum(){
-	    	return MovieQuestionType.values()[((int)(Math.random() * MovieQuestionType.values().length))];
+			if(tree == null)
+			{
+				return MovieQuestionType.values()[((int)(Math.random() * MovieQuestionType.values().length))];
+			}
+			return tree;
 	    }
 	};
 	protected Container cont;
-	protected lowerTree tree;
+	protected lowerTree tree = null;
 	private TypeOfQuestion(){
 		//etLowerTree();
 	}
@@ -109,10 +105,6 @@ enum TypeOfQuestion{
     public String getTypeString(){
     	return null;
     }
-    /*public void setCon(Container con)
-    {
-    	this.cont = con;
-    }*/
 }
 
 enum MovieQuestionType implements lowerTree{
