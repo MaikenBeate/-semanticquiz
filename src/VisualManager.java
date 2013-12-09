@@ -9,8 +9,32 @@ public class VisualManager{
 	private Question currentQue;
 	private VisualManager(){}
 	
-	private VisualManager(Question[] questionArray){
-		VisualManager.questionArray = questionArray;
+	private VisualManager(Question[] questionArray)
+	{
+		ArrayList<Question> low, medium, high;
+		low = medium = high = new ArrayList<Question>();
+		for (int i = 0; i < questionArray.length; i++)
+		{
+	        if(questionArray[i].con().difficultyLevel == "hard")
+	        {
+	        	low.add(questionArray[i]);
+	        }
+	        else if(questionArray[i].con().difficultyLevel == "medium")
+	        {
+	        	medium.add(questionArray[i]);
+	        }
+	        else if(questionArray[i].con().difficultyLevel == "easy")
+	        {
+	        	high.add(questionArray[i]);
+	        }
+		}
+		Collections.shuffle(low);
+		Collections.shuffle(medium);
+		Collections.shuffle(high);
+		low.addAll(medium);
+		low.addAll(high);
+		
+		VisualManager.questionArray = low.toArray(new Question[low.size()]);
 	}
 	public static VisualManager instantiate()
 	{	
@@ -50,7 +74,6 @@ public class VisualManager{
 			switch(currentQue.tOQ())
 			{
 			case MovieQuestion:
-				
 				switch((MovieQuestionType)currentQue.tOQ().getValue())
 				{
 				case directedÅ:
@@ -61,7 +84,6 @@ public class VisualManager{
 					tempString = tempQue.con().releaseDate;
 					break;
 				}
-				
 				break;
 			}
 			if(!answers.contains(tempString))

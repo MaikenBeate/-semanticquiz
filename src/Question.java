@@ -15,6 +15,14 @@ public class Question {
 		tOQ.setLowerTree(con);
     	GenerateQuestion();
 	}
+	public Question()
+	{
+		this.con = new Container();
+		done = false;
+		tOQ = TypeOfQuestion.values()[((int)(Math.random() * TypeOfQuestion.values().length))];
+		tOQ.setLowerTree(con);
+    	GenerateQuestion();
+	}
 	public void GenerateQuestion()
 	{		
 		String[] Preposition = new String[]{"which ", "who ", "what "};
