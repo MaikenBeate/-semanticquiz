@@ -19,6 +19,7 @@ public class SemanticInfo
 	private static ArrayList<Question> returnQue = new ArrayList<Question>();
 	private Model tdb;
 	private static SemanticInfo semInf = null;
+	private static int question = 0;
 	
 	public SemanticInfo()
 	{
@@ -48,7 +49,6 @@ public class SemanticInfo
 		return semInf;
 	}	
 	
-	//John sin oppgave
 	private Question makeQuestion(Container container) {
 		
 		Question question = new Question(container);

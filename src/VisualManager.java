@@ -74,7 +74,7 @@ public class VisualManager{
 			switch(currentQue.tOQ())
 			{
 			case MovieQuestion:
-				switch((MovieQuestionType)currentQue.tOQ().getValue())
+				switch((MovieQuestionType)currentQue.getLow())
 				{
 				case directed≈:
 					tempString = tempQue.con().directorName;

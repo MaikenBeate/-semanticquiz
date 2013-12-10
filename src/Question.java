@@ -6,6 +6,7 @@ public class Question {
 	private Container con;
 	private boolean done;
 	private TypeOfQuestion tOQ;
+	private lowerTree lT;
 	
 	public Question(Container con)
 	{
@@ -13,6 +14,8 @@ public class Question {
 		done = false;
 		tOQ = TypeOfQuestion.values()[((int)(Math.random() * TypeOfQuestion.values().length))];
 		tOQ.setLowerTree(con);
+		lT = tOQ.getValue();
+		lT.setFirstSecond(con);
     	GenerateQuestion();
 	}
 	public void GenerateQuestion()
@@ -56,83 +59,10 @@ public class Question {
 	{
 		done = setDone;
 	}
-	enum TypeOfQuestion{
-		MovieQuestion(){
-			//Overrides return with relevant type and return cast
-			@Override 
-			public MovieQuestionType getValue(){
-				return (MovieQuestionType)tree;
-			}
-			@Override
-			public String getTypeString(){
-				return "the movie " + cont.movieName;
-			}
-			@Override
-			protected lowerTree getCorrectEnum(){
-				if(tree == null)
-				{
-					return MovieQuestionType.values()[((int)(Math.random() * MovieQuestionType.values().length))];
-				}
-				return tree;
-		    }
-		};
-		protected Container cont;
-		protected lowerTree tree = null;
-		private TypeOfQuestion(){
-		}
-		protected lowerTree getCorrectEnum(){
-	    	return null;
-	    }
-		public void setLowerTree(Container con)
-		{
-			cont = con;
-			tree = getCorrectEnum();
-			tree.setFirstSecond(con);
-		}
-	    public lowerTree getValue(){
-	    	return null;
-	    }
-	    public String getTypeString(){
-	    	return null;
-	    }
-	}
-
-	enum MovieQuestionType implements lowerTree{
-			directed≈(){
-				@Override
-				public void setFirstSecond(Container con){first = 1; second = -1; third = null; ans = con.directorName;}
-				}, 
-				/*genre≈(){
-					@Override
-					public void setFirstSecond(Container con){first = 2; second = 1; third = null; ans = "erh... action, I guess..?";}
-					}, */
-					date≈(){
-						@Override
-						public void setFirstSecond(Container con){first = 2; second = 0; third = " released"; ans = con.releaseDate;}
-						};
-
-		protected int first;
-		protected int second;
-		protected String third;
-		protected String ans;
-		MovieQuestionType(){}
-		@Override
-		public int firstValue(){
-			return first;
-		}
-		@Override
-		public int secondValue(){
-			return second;
-		}
-		@Override
-		public String thirdValue()
-		{
-			return third;
-		}
-		@Override
-		public String answerS(){
-			return ans;
-		}
+	public lowerTree getLow()
+	{
+		lT.setFirstSecond(con);
+		return lT;
 	}
 }
 //Empty interface to signify that object is lower in enum tree
@@ -142,4 +72,78 @@ interface lowerTree{
 	public String thirdValue();
 	public String answerS();
 	public void setFirstSecond(Container con);
+}
+enum TypeOfQuestion{
+	MovieQuestion(){
+		//Overrides return with relevant type and return cast
+		@Override 
+		public MovieQuestionType getValue(){
+			return (MovieQuestionType)tree;
+		}
+		@Override
+		public String getTypeString(){
+			return "the movie " + cont.movieName;
+		}
+		@Override
+		protected lowerTree getCorrectEnum()
+		{
+			return MovieQuestionType.values()[((int)(Math.random() * MovieQuestionType.values().length))];
+	    }
+	};
+	protected Container cont;
+	protected lowerTree tree;
+	private TypeOfQuestion(){
+	}
+	protected lowerTree getCorrectEnum(){
+    	return null;
+    }
+	public void setLowerTree(Container con)
+	{
+		cont = con;
+		tree = getCorrectEnum();
+	}
+    public lowerTree getValue(){
+    	return null;
+    }
+    public String getTypeString(){
+    	return null;
+    }
+}
+
+enum MovieQuestionType implements lowerTree{
+		directed≈(){
+			@Override
+			public void setFirstSecond(Container con){first = 1; second = -1; third = null; ans = con.directorName;}
+			}, 
+			/*genre≈(){
+				@Override
+				public void setFirstSecond(Container con){first = 2; second = 1; third = null; ans = "erh... action, I guess..?";}
+				}, */
+				date≈(){
+					@Override
+					public void setFirstSecond(Container con){first = 2; second = 0; third = " released"; ans = con.releaseDate;}
+					};
+
+	protected int first;
+	protected int second;
+	protected String third;
+	protected String ans;
+	MovieQuestionType(){}
+	@Override
+	public int firstValue(){
+		return first;
+	}
+	@Override
+	public int secondValue(){
+		return second;
+	}
+	@Override
+	public String thirdValue()
+	{
+		return third;
+	}
+	@Override
+	public String answerS(){
+		return ans;
+	}
 }
