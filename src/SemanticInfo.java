@@ -236,7 +236,6 @@ public class SemanticInfo
 		//This is a query result from queries to LinkedMDB containing director-name and releasedate
 		String[] splitArray = queryAnswer.split("\"");
 		
-		System.out.println(title);
 		container.movieName = title;
 		container.description = description;
 		container.difficultyLevel = difficultyLevel;

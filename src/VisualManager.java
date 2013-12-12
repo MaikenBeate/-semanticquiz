@@ -64,11 +64,9 @@ public class VisualManager{
 	public void setNextQue(int i)
 	{
 		currentQue = VisualManager.questionArray[i];
-		System.out.println(currentQue.getQue());
 	}
 	public Question getCurrentQue()
 	{
-		System.out.println(currentQue.con().movieName);
 		return currentQue;
 	}
 	/**
