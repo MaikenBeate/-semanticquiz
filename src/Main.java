@@ -1,3 +1,7 @@
+
+/**
+ * Main - runs application
+ */
 public class Main {
 
 	private static SemanticInfo semInfo;
