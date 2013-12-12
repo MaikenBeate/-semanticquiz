@@ -34,6 +34,7 @@ public class SemanticInfo
 		fetchMoviesWithMediumGross();
 		fetchMoviesWithLowGross();
 		
+		System.out.println("mooving");
 		//String source = "linkedmdb\\linkedmdb-latest-dump.nt";
 		//FileManager.get().readModel(tdb, source, "N-TRIPLES");
 		

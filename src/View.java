@@ -202,7 +202,7 @@ public class View extends JFrame{
 			contentPane.add(finishedPanel, BorderLayout.CENTER);
 		}
 		scoreLabelHolder.remove(currentScoreLabel);
-		currentScoreLabel = new JLabel("Gratulerer din score ble " + score);
+		currentScoreLabel = new JLabel("Congratulations, your score is: " + score);
 		scoreLabelHolder.add(currentScoreLabel);
 		
 		buttonPanel.remove(currentButton);
