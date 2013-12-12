@@ -1,7 +1,9 @@
 import java.util.ArrayList;
 import java.util.Collections;
 
-//Singleton instantiation.
+/**
+ * VisualManager - Singleton instantiatied
+ */
 public class VisualManager{
 
 	private static VisualManager visualManager = null;
@@ -9,6 +11,9 @@ public class VisualManager{
 	private Question currentQue;
 	private VisualManager(){}
 	
+	/**
+	 * VisualManager - Shuffles the various difficulties and orders them from easy to hard
+	 */
 	private VisualManager(Question[] questionArray)
 	{
 		ArrayList<Question> low, medium, high;
@@ -53,6 +58,9 @@ public class VisualManager{
 		}
 		return visualManager;
 	}
+	/**
+	 * setNextQue, getCurrentQue - Gets and returns the current question, used to interact with 
+	 */
 	public void setNextQue(int i)
 	{
 		currentQue = VisualManager.questionArray[i];
@@ -63,6 +71,10 @@ public class VisualManager{
 		System.out.println(currentQue.con().movieName);
 		return currentQue;
 	}
+	/**
+	 * getAnswers - gets wrong answers from the containers of the other questions, 
+	 * fitting the current question and shuffles order of answers.
+	 */
 	public ArrayList<String> getAnswers()
 	{		
 		ArrayList<String> answers = new ArrayList<String>();

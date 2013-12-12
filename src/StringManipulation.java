@@ -1,3 +1,7 @@
+/**
+* StringManipulation - Statically called methods that add spaces (instead of the signifier Å) 
+* and switches the first char in string to uppercase
+*/
 public class StringManipulation {
 
 	public StringManipulation(){}

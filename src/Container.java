@@ -1,5 +1,8 @@
 import java.awt.*;
 
+/**
+* Container - Contains movie question data
+*/
 public class Container 
 {
 	public String movieName;
