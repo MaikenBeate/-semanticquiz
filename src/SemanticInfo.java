@@ -9,17 +9,15 @@ import com.hp.hpl.jena.query.QueryExecution;
 import com.hp.hpl.jena.query.QueryExecutionFactory;
 import com.hp.hpl.jena.query.QueryFactory;
 import com.hp.hpl.jena.query.ResultSet;
-import com.hp.hpl.jena.query.ResultSetFormatter;
 import com.hp.hpl.jena.rdf.model.Model;
 import com.hp.hpl.jena.tdb.TDBFactory;
-import com.hp.hpl.jena.util.FileManager;
+//import com.hp.hpl.jena.util.FileManager; //activate to run the create data set
 
 public class SemanticInfo 
 {
 	private static ArrayList<Question> returnQue = new ArrayList<Question>();
 	private Model tdb;
 	private static SemanticInfo semInf = null;
-	private static int question = 0;
 	
 	public SemanticInfo()
 	{
@@ -30,9 +28,9 @@ public class SemanticInfo
 		Dataset dataset = TDBFactory.createDataset(directory);
 		tdb = dataset.getDefaultModel();
 		
-		fetchMoviesWithHighGross();
-		fetchMoviesWithMediumGross();
-		fetchMoviesWithLowGross();
+		fetchEasyMovies();
+		fetchMediumMovies();
+		fetchDifficultMovies();
 		
 		//String source = "linkedmdb\\linkedmdb-latest-dump.nt";
 		//FileManager.get().readModel(tdb, source, "N-TRIPLES");
@@ -40,6 +38,10 @@ public class SemanticInfo
 		tdb.close() ;
 	}
 	
+	/**
+	 * Instantiates SemanticInfo
+	 * @return SemanticInfo
+	 */
 	public static SemanticInfo instantiate()
 	{
 		if(semInf == null){
@@ -49,27 +51,27 @@ public class SemanticInfo
 		return semInf;
 	}	
 	
-	private Question makeQuestion(Container container) {
-		
-		Question question = new Question(container);
-		
-		return question;
+	/**
+	 * Returns the array of questions 
+	 * @return SemanticInfo
+	 */
+	public Question[] getQuestion()
+	{
+		return returnQue.toArray(new Question[returnQue.size()]);
 	}
 	
-	
 	/**
-	 * Gets movies with low gross - difficult movies
+	 * Gets information about difficult movies from DBpedia - movie-name and description
 	 */
-	private void fetchMoviesWithLowGross(){
+	private void fetchDifficultMovies(){
 		
 		String queryString = 
 			  "PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>"
 			+ "PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>"
 			+ "PREFIX dc: <http://purl.org/dc/terms/>"
-			+ "PREFIX dbprop: <http://live.dbpedia.org/property/>"
 			+ "PREFIX foaf: <http://xmlns.com/foaf/0.1/>"
 			+ "SELECT DISTINCT ?film_title ?description WHERE {" 
-			+ "?film rdf:type <http://dbpedia.org/ontology/Film> .  " 
+			+ 		"?film rdf:type <http://dbpedia.org/ontology/Film> .  " 
 			+		"?film foaf:name ?film_title ."
 			+       "?film dc:subject <http://dbpedia.org/resource/Category:English-language_films>  ."
 			+		"?film rdfs:comment ?description ."
@@ -79,28 +81,26 @@ public class SemanticInfo
 	        Query query = QueryFactory.create(queryString);
 	        QueryExecution qExe = QueryExecutionFactory.sparqlService("http://live.dbpedia.org/sparql", query);
 	        ResultSet resultset = qExe.execSelect();  
-	        //ResultSetFormatter.out(System.out, resultset, query) ;
 	        
 	        HashMap<String,String> movieTitlesAndDescription = filterOutMovieTitles(resultset);
 	        for(String movieTitle : movieTitlesAndDescription.keySet()){
+	        	//the movie-information is used to get more required information from LinkedMDB
 	        	fetchMovieInformationFromLinkedMDB(movieTitle, movieTitlesAndDescription.get(movieTitle), "hard");
 	        }
 	}
 
-	
 	/**
-	 * Gets movies with medium gross - medium difficult movies
+	 * Gets information about medium hard movies from DBpedia - movie-name and description
 	 */
-	private void fetchMoviesWithMediumGross(){
+	private void fetchMediumMovies(){
 			
 			String queryString = 
 				  "PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>"
 				+ "PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>"
 				+ "PREFIX dc: <http://purl.org/dc/terms/>"
-				+ "PREFIX dbprop: <http://live.dbpedia.org/property/>"
 				+ "PREFIX foaf: <http://xmlns.com/foaf/0.1/>"
 				+ "SELECT DISTINCT ?film_title ?description WHERE {" 
-				+ "?film rdf:type <http://dbpedia.org/ontology/Film> .  " 
+				+ 		"?film rdf:type <http://dbpedia.org/ontology/Film> .  " 
 				+		"OPTIONAL{?film <http://dbpedia.org/property/gross>  ?gross .} ."
 				+		"?film foaf:name ?film_title ."
 				+       "?film dc:subject <http://dbpedia.org/resource/Category:English-language_films> ."
@@ -108,34 +108,30 @@ public class SemanticInfo
 				+		"FILTER(langMatches(lang(?description),\"EN\") && (?gross > 100000000))"
 				+ "} LIMIT 100";
 	
-			
-			
 		        Query query = QueryFactory.create(queryString);
 		        QueryExecution qExe = QueryExecutionFactory.sparqlService("http://live.dbpedia.org/sparql", query); 
 		        ResultSet resultset = qExe.execSelect();
 
 		        HashMap<String,String> movieTitlesAndDescription = filterOutMovieTitles(resultset);
 		        for(String movieTitle : movieTitlesAndDescription.keySet()){
+		        	//the movie-information is used to get more required information from LinkedMDB
 		        	fetchMovieInformationFromLinkedMDB(movieTitle, movieTitlesAndDescription.get(movieTitle), "medium");
 		        }
-		}
-	
+	}
 	
 	/**
-	 * Gets movies with high gross - easy movies
+	 * Gets information about easy movies from DBpedia, gets movie-name and description
 	 */
-	private void fetchMoviesWithHighGross(){
+	private void fetchEasyMovies(){
 			
 			String queryString = 
 				  "PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>"
 				+ "PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>"
 				+ "PREFIX dc: <http://purl.org/dc/terms/>"
-				+ "PREFIX dbprop: <http://live.dbpedia.org/property/>"
-				+ "PREFIX skos: <http://www.w3.org/2004/02/skos/core#>"
 				+ "PREFIX foaf: <http://xmlns.com/foaf/0.1/>"
 				+ "PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>"
 				+ "SELECT DISTINCT ?film_title ?description WHERE {" 
-				+ "?film rdf:type <http://dbpedia.org/ontology/Film> .  " 
+				+ 		"?film rdf:type <http://dbpedia.org/ontology/Film> .  " 
 				+		"OPTIONAL{?film <http://dbpedia.org/property/gross>  ?gross .} ."
 				+		"?film foaf:name ?film_title ."
 				+ 		"?film <http://dbpedia.org/ontology/releaseDate> ?released ."
@@ -148,11 +144,9 @@ public class SemanticInfo
 		        QueryExecution qExe = QueryExecutionFactory.sparqlService("http://live.dbpedia.org/sparql", query);
 		        ResultSet resultset = qExe.execSelect();
 		        
-		        //ResultSetFormatter.out(System.out, resultset, query) ;
-		        
 		        HashMap<String,String> movieTitlesAndDescription = filterOutMovieTitles(resultset);
 		        for(String movieTitle : movieTitlesAndDescription.keySet()){
-
+		        	//the movie-information is used to get more required information from LinkedMDB
 		        	fetchMovieInformationFromLinkedMDB(movieTitle, movieTitlesAndDescription.get(movieTitle), "easy");
 		        }
 		}
@@ -162,17 +156,17 @@ public class SemanticInfo
 	 * Queries LinkedMDB for information about a movie/movies with a specific movie tile, 
 	 * saves the information and formulates a questions based on the movie information
 	 * @param String movieTitle - a movie title
+	 * @param String description - the movie description
 	 * @param String difficultyLevel - relative to gross
 	 */
 	private void fetchMovieInformationFromLinkedMDB(String title, String description, String difficultyLevel){
 			
 			String queryString =
-					  "PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>"
-					+ "PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>"
-					+ "PREFIX dc: <http://purl.org/dc/terms/>"
+					 
+					"PREFIX dc: <http://purl.org/dc/terms/>"
 					+ "PREFIX movie: <http://data.linkedmdb.org/resource/movie/>"
 					+ "SELECT DISTINCT "
-					+ "?movieuri ?title ?directorName ?date "
+					+ "?directorName ?date "
 					+ "WHERE {"
 					+ 		"?movieuri dc:title \"" + title + "\" ."
 					+ 		"?movieuri movie:director ?directoruri ."
@@ -180,31 +174,21 @@ public class SemanticInfo
 					+ 		"?movieuri dc:date ?date ." 
 					+ "} LIMIT 1";
 
-			
 	        Query query = QueryFactory.create(queryString);
-	        //QueryExecution qExe = QueryExecutionFactory.sparqlService( "http://data.linkedmdb.org/sparql", query );
-
 	        QueryExecution qexec = QueryExecutionFactory.create(query, tdb) ;
 	        ResultSet resultset = qexec.execSelect() ;
-	        // ResultSetFormatter.out(resultset) ;
-	        
-	        //ResultSet resultset = qExe.execSelect();
-	        
-	        //Making a Container and formulating a question for each movie
+
 	        while(resultset.hasNext())
-		    {
-	        	//System.out.println(resultset.next().toString());
-	        	
+		    {	        	
 	        	returnQue.add(makeQuestion(saveInformationInContainer(resultset.next().toString(), title, description, difficultyLevel)));
 		    }
 	              
 		}
-
 	
 	/**
-	 * Extracts movietitles from a resultset of movies, and returns them in an arraylist
-	 * @param Resultset - resultset
-	 * @return ArrayList<String> movietitles
+	 * Extracts movie titles from a result set of movies, and returns them in a hash map
+	 * @param Resultset - result set
+	 * @return HashMap<String, String> containing movie titles and movie descriptions
 	 */
 	private HashMap<String, String> filterOutMovieTitles(ResultSet resultset) {
 		
@@ -213,10 +197,7 @@ public class SemanticInfo
 		while(resultset.hasNext())
 		{
 			String movieResult = resultset.next().toString();
-
 			String[] splitArray = movieResult.split("\"");
-			
-
 			String title = "";
 			String description = "";
 
@@ -241,14 +222,18 @@ public class SemanticInfo
 	
 	
 	/**
-	 * Gets a string of infomation about a movie, puts the information into a Container
+	 * Receives information about a movie and puts the information into a container, and
+	 * then returns the container
 	 * @param String queryAnswer
+	 * @param String title
+	 * @param String description
 	 * @param String difficultyLevel - relative to gross
 	 * @return Container container - the container with the information filled in
 	 */
 	private Container saveInformationInContainer(String queryAnswer, String title, String description, String difficultyLevel) {
 		
 		Container container = new Container();
+		//This is a query result from queries to LinkedMDB containing director-name and releasedate
 		String[] splitArray = queryAnswer.split("\"");
 		
 		System.out.println(title);
@@ -270,24 +255,16 @@ public class SemanticInfo
 		return container;
 	}
 	
-	
-	public Question[] getQuestion()
-	{
-		//returnQue
-		return returnQue.toArray(new Question[returnQue.size()]);
-	}
-	
-	
-	//temporary
-	/*public static void main(String[] args) {
+	/**
+	 * Make question for a container of information
+	 * @param Container - container of information
+	 * @return Question - question based on the container-information
+	 */
+	private Question makeQuestion(Container container) {
 		
-		SemanticInfo sem = new SemanticInfo();
-	    sem.fetchMoviesWithHighGross();
-		sem.fetchMoviesWithMediumGross();
-		sem.fetchMoviesWithLowGross();
-		 //temporary test
-        for(Container container : containers){
-        	System.out.println("Movie title: " + container.movieName + ", Director: " + container.directorName + ", Date: " + container.releaseDate + " Desc: " + container.description + ", Difficulty Level: " + container.difficultyLevel);
-        }
-	}*/
+		Question question = new Question(container);
+		
+		return question;
+	}
+		
 }

@@ -33,8 +33,7 @@ public class View extends JFrame{
 	private int correctAnswers;
 	private int score;
 
-
-	private JPanel currentView; // question, fasit or finished
+	private JPanel currentView; // question, solution or finished
 	
 	//Question view
 	private JPanel questionPanel;
@@ -44,7 +43,7 @@ public class View extends JFrame{
 	private ButtonGroup currentAnswersGroup;
 	private JPanel currentQuestionPanel;
 	
-	//Fasit view
+	//Solution view
 	private JPanel solutionPanel;
 	private JPanel wrongRightImagePanel;
 	private JPanel wrongRightLabelHolder;
@@ -202,7 +201,7 @@ public class View extends JFrame{
 			contentPane.add(finishedPanel, BorderLayout.CENTER);
 		}
 		scoreLabelHolder.remove(currentScoreLabel);
-		currentScoreLabel = new JLabel("Gratulerer din score ble " + score);
+		currentScoreLabel = new JLabel("Congratulations, your score is: " + score);
 		scoreLabelHolder.add(currentScoreLabel);
 		
 		buttonPanel.remove(currentButton);
@@ -296,9 +295,7 @@ public class View extends JFrame{
 	private void setUpAllViews() {
 		
 		setUpQuestinView();
-		
 		setUpSolutionView();
-		
 		setUpFinishedView();
 	}
 

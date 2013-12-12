@@ -98,7 +98,7 @@ public class VisualManager{
 				}
 				break;
 			}
-			if(!answers.contains(tempString))
+			if(!answers.contains(tempString) && (tempString != null && tempString.length() > 0))
 			{
 				answers.add(tempString);
 			}

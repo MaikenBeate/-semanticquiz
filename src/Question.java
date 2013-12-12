@@ -121,7 +121,9 @@ enum TypeOfQuestion{
     	return null;
     }
 }
-
+/**
+* MovieQuestionType - Enum of movie specific question types, note lower tree
+*/
 enum MovieQuestionType implements lowerTree{
 		directed≈(){
 			@Override
