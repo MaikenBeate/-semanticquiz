@@ -1,8 +1,6 @@
 import java.awt.BorderLayout;
 import java.awt.Container;
 import java.awt.Dimension;
-import java.awt.FlowLayout;
-import java.awt.GridBagLayout;
 
 import javax.swing.BoxLayout;
 import javax.swing.ButtonGroup;
@@ -20,7 +18,7 @@ import javax.swing.JLabel;
 
 
 /**
- * Singleton instantiation
+ * Singleton instantiation - The GUI of the program
  *
  */
 @SuppressWarnings("serial")
@@ -47,7 +45,7 @@ public class View extends JFrame{
 	private JPanel currentQuestionPanel;
 	
 	//Fasit view
-	private JPanel fasitPanel;
+	private JPanel solutionPanel;
 	private JPanel wrongRightImagePanel;
 	private JPanel wrongRightLabelHolder;
 	private JLabel currentWrongRightLabel;
@@ -66,16 +64,18 @@ public class View extends JFrame{
 	private JButton startButton;
 	private JButton nextButton;
 	private JButton finishButton;
-	
-
 
 	/**
-	 * 
+	 * Constructor of View
 	 */
 	private View(){
 		setUpInterFace();
 	}
 	
+	/**
+	 * Instantiates View
+	 * @return View view
+	 */
 	public static View instantiate(){
 		
 		if(view == null){
@@ -85,8 +85,11 @@ public class View extends JFrame{
 		return view;
 	}
 	
-	
-
+	/**
+	 * Visualise a question and answer-list in view
+	 * @param String question - the question
+	 * @param ArrayList<String> answer-alternatives
+	 */
 	public void setQuestion(String question, ArrayList<String> answerList){
 		updateScore();
 		
@@ -120,43 +123,49 @@ public class View extends JFrame{
 			currentAnswers.add(button);
 			currentAnswersPanel.add(button);
 			currentAnswersGroup.add(button);
-			//button.setVisible(true);
+	
 		}
-		
 		
 		currentQuestionPanel.add(currentQuestion);
 		pack();
 
 	}
 	
-	
+	/**
+	 * Returns the selected answer
+	 * @return String - the selected answer
+	 *
+	 */
 	public String getAnswer() {
 		return currentAnswersGroup.getSelection().getActionCommand();
 	}
 	
-	
-	public void fasit(Boolean correct, String movieDescription, String correctAnswer){
+	/**
+	 * Presents the question-solution
+	 * @param Boolean - according to if the answer is correct or false
+	 * @param String movieDescription - description of the movie
+	 * @param String correctAnswer - the correct answer
+	 */
+	public void soulution(Boolean correct, String movieDescription, String correctAnswer){
 		questionsAnswerd ++;
 		
-		if(currentView != fasitPanel){
+		if(currentView != solutionPanel){
 			if(currentView != null){
 				contentPane.remove(currentView);
 			}
-			currentView = fasitPanel;
-			contentPane.add(fasitPanel, BorderLayout.CENTER);
+			currentView = solutionPanel;
+			contentPane.add(solutionPanel, BorderLayout.CENTER);
 		}
 		
 		if(correct == true){
 			correctAnswers ++;
-			//Sette riktig-bilde
 			wrongRightLabelHolder.remove(currentWrongRightLabel);
-			currentWrongRightLabel = new JLabel("Riktig");
+			currentWrongRightLabel = new JLabel("Correct!");
 			wrongRightLabelHolder.add(currentWrongRightLabel);
 		}
 		else{
-			//Sette galt-bilde
 			wrongRightLabelHolder.remove(currentWrongRightLabel);
-			currentWrongRightLabel = new JLabel("Feil! Riktig svar er " + correctAnswer);
+			currentWrongRightLabel = new JLabel("Wrong, the correct answer is " + correctAnswer);
 			wrongRightLabelHolder.add(currentWrongRightLabel);
 		}
 		
@@ -181,7 +190,9 @@ public class View extends JFrame{
 		
 	}
 
-	
+	/**
+	 * Shows the view for finished quiz-round
+	 */
 	public void finish(){
 		if(currentView != finishedPanel){
 			if(currentView != null){
@@ -202,9 +213,8 @@ public class View extends JFrame{
 		pack();
 	}
 
-	
 	/**
-	 * 
+	 * Sets up the user-interface/view
 	 */
 	private void setUpInterFace() {
 		actionController = new ActionController(this);
@@ -213,12 +223,10 @@ public class View extends JFrame{
 		
 		contentPane = this.getContentPane();
 		contentPane.setLayout(new BorderLayout());
-		//contentPane.setFont(new Font("Serif", Font.PLAIN, 13));
 		contentPane.setBackground(Color.WHITE);
-		
-		
+			
 		addLogo();
-		setUpQuestionPanel();
+		setUpAllViews();
 		addFooter();
 		
 		setDefaultCloseOperation(EXIT_ON_CLOSE);
@@ -226,7 +234,9 @@ public class View extends JFrame{
 		pack();
 	}
 	
-	
+	/**
+	 * Adds the semantic-quiz logo to the view
+	 */
 	private void addLogo() {
 		JPanel west = new JPanel();
 		west.setBackground(Color.WHITE);
@@ -239,7 +249,9 @@ public class View extends JFrame{
 		contentPane.add(west, BorderLayout.WEST);
 	}
 	
-	
+	/**
+	 * Updates the current score in view
+	 */
 	private void updateScore(){
 		
 		if(scorePanel != null){
@@ -254,7 +266,9 @@ public class View extends JFrame{
 		pack();
 	}
 	
-	
+	/**
+	 * Adds the footer of the view. Initiates all the buttons, sets start-button in view
+	 */
 	private void addFooter(){
 		answerButton = new JButton("Answer");
 		answerButton.addActionListener(actionController);
@@ -262,10 +276,10 @@ public class View extends JFrame{
 		startButton = new JButton("Start");
 		startButton.addActionListener(actionController);
 		
-		nextButton = new JButton("Neste");
+		nextButton = new JButton("Next");
 		nextButton.addActionListener(actionController);
 		
-		finishButton = new JButton("Ferdig");
+		finishButton = new JButton("Finish");
 		finishButton.addActionListener(actionController);
 		
 		buttonPanel = new JPanel();
@@ -275,14 +289,66 @@ public class View extends JFrame{
 		
 		contentPane.add(buttonPanel, BorderLayout.SOUTH);
 	}
-
 	
 	/**
-	 * Skal parteres
+	 * Sets up all the views
 	 */
-	private void setUpQuestionPanel() {
+	private void setUpAllViews() {
 		
-		//QuestionView
+		setUpQuestinView();
+		
+		setUpSolutionView();
+		
+		setUpFinishedView();
+	}
+
+	/**
+	 * Sets up the quiz-is-finished view
+	 */
+	private void setUpFinishedView() {
+		finishedPanel = new JPanel();
+		finishedPanel.setLayout(new BoxLayout(finishedPanel, BoxLayout.Y_AXIS)); //shall be vertical
+		finishedPanel.setPreferredSize(new Dimension(500, 500));
+		finishedPanel.setBackground(Color.WHITE);
+		
+		scoreLabelHolder = new JPanel();
+		scoreLabelHolder.setBackground(Color.WHITE);
+		currentScoreLabel = new JLabel("Hei");
+		scoreLabelHolder.add(currentScoreLabel);
+		
+		finishedPanel.add(scoreLabelHolder);
+	}
+
+	/**
+	 * Sets up the solution-for-a-question-view
+	 *
+	 */
+	private void setUpSolutionView() {
+		solutionPanel = new JPanel();
+		solutionPanel.setLayout(new BoxLayout(solutionPanel, BoxLayout.Y_AXIS)); //shall be vertical
+		solutionPanel.setPreferredSize(new Dimension(500, 500));
+		solutionPanel.setBackground(Color.WHITE);
+		
+		wrongRightImagePanel = new JPanel();
+		wrongRightImagePanel.setBackground(Color.WHITE);
+		wrongRightLabelHolder = new JPanel();
+		wrongRightLabelHolder.setBackground(Color.WHITE);
+		currentWrongRightLabel = new JLabel("");
+		wrongRightLabelHolder.add(currentWrongRightLabel);
+		movieDescriptionHolder = new JPanel();
+		movieDescriptionHolder.setBackground(Color.WHITE);
+		currentMovieDescription = textAreaProperties(new JTextArea());
+		movieDescriptionHolder.add(currentMovieDescription);
+		
+		solutionPanel.add(wrongRightImagePanel);
+		solutionPanel.add(wrongRightLabelHolder);
+		solutionPanel.add(movieDescriptionHolder);
+	}
+
+	/**
+	 * Sets up the question-view
+	 */
+	private void setUpQuestinView() {
 		questionPanel = new JPanel();
 		questionPanel.setLayout(new BoxLayout(questionPanel, BoxLayout.Y_AXIS)); //shall be vertical
 		questionPanel.setPreferredSize(new Dimension(500, 500));
@@ -300,42 +366,14 @@ public class View extends JFrame{
 		currentAnswersGroup = new ButtonGroup();
 		questionPanel.add(currentQuestionPanel);
 		questionPanel.add(currentAnswersPanel);
-		
-		//Fasit View
-		fasitPanel = new JPanel();
-		fasitPanel.setLayout(new BoxLayout(fasitPanel, BoxLayout.Y_AXIS)); //shall be vertical
-		fasitPanel.setPreferredSize(new Dimension(500, 500));
-		fasitPanel.setBackground(Color.WHITE);
-		
-		wrongRightImagePanel = new JPanel();
-		wrongRightImagePanel.setBackground(Color.WHITE);
-		wrongRightLabelHolder = new JPanel();
-		wrongRightLabelHolder.setBackground(Color.WHITE);
-		currentWrongRightLabel = new JLabel("");
-		wrongRightLabelHolder.add(currentWrongRightLabel);
-		movieDescriptionHolder = new JPanel();
-		movieDescriptionHolder.setBackground(Color.WHITE);
-		currentMovieDescription = textAreaProperties(new JTextArea());
-		movieDescriptionHolder.add(currentMovieDescription);
-		
-		fasitPanel.add(wrongRightImagePanel);
-		fasitPanel.add(wrongRightLabelHolder);
-		fasitPanel.add(movieDescriptionHolder);
-		
-		//Finished view
-		finishedPanel = new JPanel();
-		finishedPanel.setLayout(new BoxLayout(finishedPanel, BoxLayout.Y_AXIS)); //shall be vertical
-		finishedPanel.setPreferredSize(new Dimension(500, 500));
-		finishedPanel.setBackground(Color.WHITE);
-		
-		scoreLabelHolder = new JPanel();
-		scoreLabelHolder.setBackground(Color.WHITE);
-		currentScoreLabel = new JLabel("Hei");
-		scoreLabelHolder.add(currentScoreLabel);
-		
-		finishedPanel.add(scoreLabelHolder);
 	}
 	
+	/**
+	 * Sets properties for a text-area
+	 * @param JTextArea - a text-area
+	 * @return JTextAre - the text-area with the new properties
+	 *
+	 */
 	private JTextArea textAreaProperties(JTextArea textArea) {
 	    textArea.setEditable(false);  
 	    textArea.setLineWrap(true);
@@ -343,14 +381,5 @@ public class View extends JFrame{
 	    return textArea;
 	}
 
-//	/**
-//	 * @param args 
-//	 * Temporary
-//	 */
-//	public static void main(String[] args) {
-//		View view = new View();
-//		
-//
-//	}
 
 }

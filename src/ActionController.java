@@ -19,14 +19,14 @@ public class ActionController implements ActionListener{
 		else if(event.getActionCommand().equals("Answer")){
 			String answer = view.getAnswer();
 			
-			view.fasit((answer == VisualManager.instantiate().getCurrentQue().getQueAns() ? true : false),
+			view.soulution((answer == VisualManager.instantiate().getCurrentQue().getQueAns() ? true : false),
 				VisualManager.instantiate().getCurrentQue().con().description,
 					VisualManager.instantiate().getCurrentQue().getQueAns());
 		}
-		else if(event.getActionCommand().equals("Neste")){
+		else if(event.getActionCommand().equals("Next")){
 			askAllTheQuestions();
 		}
-		else if(event.getActionCommand().equals("Ferdig")){
+		else if(event.getActionCommand().equals("Finish")){
 			view.finish();
 		}	
 	}
