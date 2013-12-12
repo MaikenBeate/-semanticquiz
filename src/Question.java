@@ -8,9 +8,6 @@ public class Question {
 	private TypeOfQuestion tOQ;
 	private lowerTree lT;
 	
-	/**
-	 * Question - Individual question generation
-	 */
 	public Question(Container con)
 	{
 		this.con = con;
@@ -21,28 +18,18 @@ public class Question {
 		lT.setFirstSecond(con);
     	GenerateQuestion();
 	}
-	
-	/**
-	 * GenerateQuestion - Generates questions based on information from the container, enum tree and prepositions/postpositions
-	 */
 	public void GenerateQuestion()
-	{	
-		//sets preposition if applicable
-		//gets and sets questions type specific value (director or date)
-		//sets postposition if applicable
-		//Associated value based on type of question (movie) + name of the value gotten from container
-		//sets postposition if applicable
-		
+	{		
 		String[] Preposition = new String[]{"which ", "who ", "what "};
 		String[] Postposition = new String[]{"was ", "is "};
-		String tempString = (tOQ.getValue().firstValue() > -1 ? Preposition[tOQ.getValue().firstValue()] : "") 
+		String tempString = (tOQ.getValue().firstValue() > -1 ? Preposition[tOQ.getValue().firstValue()] : "")
 				+ tOQ.getValue().toString() 
 				+ (tOQ.getValue().secondValue() > -1 ? Postposition[tOQ.getValue().secondValue()] : "") 
-				+ tOQ.getTypeString() 
-				+ (tOQ.getValue().thirdValue() != null ? tOQ.getValue().thirdValue() : "") 
+				+ tOQ.getTypeString()
+				+ (tOQ.getValue().thirdValue() != null ? tOQ.getValue().thirdValue() : "")
 				+ "?";
 		
-		questionAnswer = tOQ.getValue().answerS(); //sets answer as correct value from container based on question type
+		questionAnswer = tOQ.getValue().answerS();
 		
 		tempString = StringManipulation.AddSpacesToReplaceZero(StringManipulation.FirstToUpperCase(tempString, false));
 		questionString = tempString;
@@ -78,10 +65,7 @@ public class Question {
 		return lT;
 	}
 }
-
-/**
- * lowerTree - Empty interface to signify that object is lower in enum tree, note lowerTree can be used to signify multiple branches of the lower tree
- */
+//Empty interface to signify that object is lower in enum tree
 interface lowerTree{
 	public int firstValue();
 	public int secondValue();
@@ -89,9 +73,6 @@ interface lowerTree{
 	public String answerS();
 	public void setFirstSecond(Container con);
 }
-/**
- * TypeOfQuestion - Determines and gets values associated with the top question type
- */
 enum TypeOfQuestion{
 	MovieQuestion(){
 		//Overrides return with relevant type and return cast
@@ -128,16 +109,13 @@ enum TypeOfQuestion{
     	return null;
     }
 }
-/**
- * Movie type question - Determines and gets values associated with specific sub type of question (note lower tree)
- */
+
 enum MovieQuestionType implements lowerTree{
 		directed≈(){
 			@Override
 			public void setFirstSecond(Container con){first = 1; second = -1; third = null; ans = con.directorName;}
 			}, 
 			/*genre≈(){
-			 * //Removed due to unreliable data from linkedmdb
 				@Override
 				public void setFirstSecond(Container con){first = 2; second = 1; third = null; ans = "erh... action, I guess..?";}
 				}, */
