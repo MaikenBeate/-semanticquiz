@@ -1,8 +1,5 @@
 public class StringManipulation {
 
-	/**
-	 * StringManipulation - For editing question text (like enum names)
-	 */
 	public StringManipulation(){}
 	
 	public static String AddSpacesToReplaceZero(String s)
