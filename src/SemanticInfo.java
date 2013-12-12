@@ -149,7 +149,7 @@ public class SemanticInfo
 		        	//the movie-information is used to get more required information from LinkedMDB
 		        	fetchMovieInformationFromLinkedMDB(movieTitle, movieTitlesAndDescription.get(movieTitle), "easy");
 		        }
-		}
+	}
 	
 	
 	/**
@@ -183,7 +183,7 @@ public class SemanticInfo
 	        	returnQue.add(makeQuestion(saveInformationInContainer(resultset.next().toString(), title, description, difficultyLevel)));
 		    }
 	              
-		}
+	}
 	
 	/**
 	 * Extracts movie titles from a result set of movies, and returns them in a hash map
@@ -219,8 +219,7 @@ public class SemanticInfo
 		
 		return movieTitlesAndDescription;
 	}
-	
-	
+		
 	/**
 	 * Receives information about a movie and puts the information into a container, and
 	 * then returns the container

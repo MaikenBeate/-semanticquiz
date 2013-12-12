@@ -6,8 +6,8 @@ public class StringManipulation {
 
 	public StringManipulation(){}
 	
-	public static String AddSpacesToReplaceZero(String s)
-	{
+	public static String AddSpacesToReplaceZero(String s){
+		
 		if(s == null){return "";}
 		
 		StringBuilder sB = new StringBuilder(s.length());
@@ -24,8 +24,9 @@ public class StringManipulation {
 		
 		return sB.toString();
 	}
-	public static String FirstToUpperCase(String s, boolean beginFromOne)
-	{
+	
+	public static String FirstToUpperCase(String s, boolean beginFromOne){
+		
 		if(s == null){return "";}
 		
 		StringBuilder sB = new StringBuilder(s.length());

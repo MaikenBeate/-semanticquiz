@@ -1,33 +1,32 @@
 /**
-* Question - Chooses question type and generates a question based on the container class
-*/
+ * Question - Chooses question type and generates a question based on the container class
+ */
 public class Question {
-	
+
 	private String questionString;
 	private String questionAnswer;
 	private Container con;
 	private boolean done;
 	private TypeOfQuestion tOQ;
 	private lowerTree lT;
-	
+
 	/**
-	* Question - Sets up the type of question
-	*/
-	public Question(Container con)
-	{
+	 * Question - Sets up the type of question
+	 */
+	public Question(Container con){
 		this.con = con;
 		done = false;
 		tOQ = TypeOfQuestion.values()[((int)(Math.random() * TypeOfQuestion.values().length))];
 		tOQ.setLowerTree(con);
 		lT = tOQ.getValue();
 		lT.setFirstSecond(con);
-    	GenerateQuestion();
+		GenerateQuestion();
 	}
+	
 	/**
-	* GenerateQuestion - Generates the question and it's answer based on the type of question and the local container
-	*/
-	public void GenerateQuestion()
-	{		
+	 * GenerateQuestion - Generates the question and it's answer based on the type of question and the local container
+	 */
+	public void GenerateQuestion(){		
 		String[] Preposition = new String[]{"which ", "who ", "what "};
 		String[] Postposition = new String[]{"was ", "is "};
 		String tempString = (tOQ.getValue().firstValue() > -1 ? Preposition[tOQ.getValue().firstValue()] : "") /*adds preposition if applicable*/
@@ -38,53 +37,56 @@ public class Question {
 				+ "?";
 		//Gets correct answer associated to question lowerTree type
 		questionAnswer = tOQ.getValue().answerS();
-		
+
 		tempString = StringManipulation.AddSpacesToReplaceZero(StringManipulation.FirstToUpperCase(tempString, false));
 		questionString = tempString;
 	}
-	public String getQue()
-	{
+	
+	public String getQue(){
 		return questionString;
 	}
-	public String getQueAns()
-	{
+	
+	public String getQueAns(){
 		return questionAnswer;
 	}
-	public Container con()
-	{
+	
+	public Container con(){
 		return con;
 	}
-	public TypeOfQuestion tOQ()
-	{
+	
+	public TypeOfQuestion tOQ(){
 		return tOQ;
 	}
-	public boolean getDone()
-	{
+	
+	public boolean getDone(){
 		return done;
 	}
-	public void setDone(boolean setDone)
-	{
+	
+	public void setDone(boolean setDone){
 		done = setDone;
 	}
-	public lowerTree getLow()
-	{
+	
+	public lowerTree getLow(){
 		lT.setFirstSecond(con);
 		return lT;
 	}
 }
+
 /**
-* lowerTree - Interface to signify that object is lower in enum tree (lower question type)
-*/
+ * lowerTree - Interface to signify that object is lower in enum tree (lower question type)
+ */
 interface lowerTree{
+	
 	public int firstValue();
 	public int secondValue();
 	public String thirdValue();
 	public String answerS();
 	public void setFirstSecond(Container con);
 }
+
 /**
-* TypeOfQuestion - Enum of top level question types
-*/
+ * TypeOfQuestion - Enum of top level question types
+ */
 enum TypeOfQuestion{
 	MovieQuestion(){
 		//Overrides return with relevant type and return cast
@@ -100,62 +102,72 @@ enum TypeOfQuestion{
 		protected lowerTree getCorrectEnum()
 		{
 			return MovieQuestionType.values()[((int)(Math.random() * MovieQuestionType.values().length))];
-	    }
+		}
 	};
+	
 	protected Container cont;
 	protected lowerTree tree;
 	private TypeOfQuestion(){
 	}
+	
 	protected lowerTree getCorrectEnum(){
-    	return null;
-    }
+		return null;
+	}
+	
 	public void setLowerTree(Container con)
 	{
 		cont = con;
 		tree = getCorrectEnum();
 	}
-    public lowerTree getValue(){
-    	return null;
-    }
-    public String getTypeString(){
-    	return null;
-    }
+	
+	public lowerTree getValue(){
+		return null;
+	}
+	
+	public String getTypeString(){
+		return null;
+	}
 }
+
 /**
-* MovieQuestionType - Enum of movie specific question types, note lower tree
-*/
+ * MovieQuestionType - Enum of movie specific question types, note lower tree
+ */
 enum MovieQuestionType implements lowerTree{
-		directed≈(){
-			@Override
-			public void setFirstSecond(Container con){first = 1; second = -1; third = null; ans = con.directorName;}
-			}, 
-			/*genre≈(){
+	directed≈(){
+		@Override
+		public void setFirstSecond(Container con){first = 1; second = -1; third = null; ans = con.directorName;}
+	}, 
+	/*genre≈(){
 				@Override
 				public void setFirstSecond(Container con){first = 2; second = 1; third = null; ans = "erh... action, I guess..?";}
 				}, */
-				date≈(){
-					@Override
-					public void setFirstSecond(Container con){first = 2; second = 0; third = " released"; ans = con.releaseDate;}
-					};
+	date≈(){
+		@Override
+		public void setFirstSecond(Container con){first = 2; second = 0; third = " released"; ans = con.releaseDate;}
+	};
 
 	protected int first;
 	protected int second;
 	protected String third;
 	protected String ans;
 	MovieQuestionType(){}
+	
 	@Override
 	public int firstValue(){
 		return first;
 	}
+	
 	@Override
 	public int secondValue(){
 		return second;
 	}
+	
 	@Override
 	public String thirdValue()
 	{
 		return third;
 	}
+	
 	@Override
 	public String answerS(){
 		return ans;

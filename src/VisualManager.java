@@ -41,6 +41,7 @@ public class VisualManager{
 		
 		VisualManager.questionArray = low.toArray(new Question[low.size()]);
 	}
+	
 	public static VisualManager instantiate()
 	{	
 		if(visualManager == null)
@@ -58,6 +59,7 @@ public class VisualManager{
 		}
 		return visualManager;
 	}
+	
 	/**
 	 * setNextQue, getCurrentQue - Gets and returns the current question, used to interact with 
 	 */
@@ -65,10 +67,12 @@ public class VisualManager{
 	{
 		currentQue = VisualManager.questionArray[i];
 	}
+	
 	public Question getCurrentQue()
 	{
 		return currentQue;
 	}
+	
 	/**
 	 * getAnswers - gets wrong answers from the containers of the other questions, 
 	 * fitting the current question and shuffles order of answers.
