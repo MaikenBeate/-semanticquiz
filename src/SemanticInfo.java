@@ -11,7 +11,7 @@ import com.hp.hpl.jena.query.QueryFactory;
 import com.hp.hpl.jena.query.ResultSet;
 import com.hp.hpl.jena.rdf.model.Model;
 import com.hp.hpl.jena.tdb.TDBFactory;
-import com.hp.hpl.jena.util.FileManager;
+//import com.hp.hpl.jena.util.FileManager; //activate to run the create data set
 
 public class SemanticInfo 
 {
@@ -69,10 +69,9 @@ public class SemanticInfo
 			  "PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>"
 			+ "PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>"
 			+ "PREFIX dc: <http://purl.org/dc/terms/>"
-			+ "PREFIX dbprop: <http://live.dbpedia.org/property/>"
 			+ "PREFIX foaf: <http://xmlns.com/foaf/0.1/>"
 			+ "SELECT DISTINCT ?film_title ?description WHERE {" 
-			+ "?film rdf:type <http://dbpedia.org/ontology/Film> .  " 
+			+ 		"?film rdf:type <http://dbpedia.org/ontology/Film> .  " 
 			+		"?film foaf:name ?film_title ."
 			+       "?film dc:subject <http://dbpedia.org/resource/Category:English-language_films>  ."
 			+		"?film rdfs:comment ?description ."
@@ -99,10 +98,9 @@ public class SemanticInfo
 				  "PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>"
 				+ "PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>"
 				+ "PREFIX dc: <http://purl.org/dc/terms/>"
-				+ "PREFIX dbprop: <http://live.dbpedia.org/property/>"
 				+ "PREFIX foaf: <http://xmlns.com/foaf/0.1/>"
 				+ "SELECT DISTINCT ?film_title ?description WHERE {" 
-				+ "?film rdf:type <http://dbpedia.org/ontology/Film> .  " 
+				+ 		"?film rdf:type <http://dbpedia.org/ontology/Film> .  " 
 				+		"OPTIONAL{?film <http://dbpedia.org/property/gross>  ?gross .} ."
 				+		"?film foaf:name ?film_title ."
 				+       "?film dc:subject <http://dbpedia.org/resource/Category:English-language_films> ."
@@ -130,12 +128,10 @@ public class SemanticInfo
 				  "PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>"
 				+ "PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>"
 				+ "PREFIX dc: <http://purl.org/dc/terms/>"
-				+ "PREFIX dbprop: <http://live.dbpedia.org/property/>"
-				+ "PREFIX skos: <http://www.w3.org/2004/02/skos/core#>"
 				+ "PREFIX foaf: <http://xmlns.com/foaf/0.1/>"
 				+ "PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>"
 				+ "SELECT DISTINCT ?film_title ?description WHERE {" 
-				+ "?film rdf:type <http://dbpedia.org/ontology/Film> .  " 
+				+ 		"?film rdf:type <http://dbpedia.org/ontology/Film> .  " 
 				+		"OPTIONAL{?film <http://dbpedia.org/property/gross>  ?gross .} ."
 				+		"?film foaf:name ?film_title ."
 				+ 		"?film <http://dbpedia.org/ontology/releaseDate> ?released ."
@@ -166,12 +162,11 @@ public class SemanticInfo
 	private void fetchMovieInformationFromLinkedMDB(String title, String description, String difficultyLevel){
 			
 			String queryString =
-					  "PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>"
-					+ "PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>"
-					+ "PREFIX dc: <http://purl.org/dc/terms/>"
+					 
+					"PREFIX dc: <http://purl.org/dc/terms/>"
 					+ "PREFIX movie: <http://data.linkedmdb.org/resource/movie/>"
 					+ "SELECT DISTINCT "
-					+ "?movieuri ?title ?directorName ?date "
+					+ "?directorName ?date "
 					+ "WHERE {"
 					+ 		"?movieuri dc:title \"" + title + "\" ."
 					+ 		"?movieuri movie:director ?directoruri ."
